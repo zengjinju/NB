@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NB.iml" filepath="$PROJECT_DIR$/NB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nb-biz/nb-biz.iml" filepath="$PROJECT_DIR$/nb-biz/nb-biz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nb-dal/nb-dal.iml" filepath="$PROJECT_DIR$/nb-dal/nb-dal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nb-web/nb-web.iml" filepath="$PROJECT_DIR$/nb-web/nb-web.iml" />
+    </modules>
+  </component>
+</project>
