@@ -6,8 +6,6 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <!--ignore-unresolvable='true' 解决当加载多个属性文件的时候出现 Could not resolve placeholder的问题-->
-    <context:property-placeholder location="classpath*:application.properties" ignore-unresolvable="true" />
     <!-- 配置线程池 -->
     <bean id="taskExecutor"
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
