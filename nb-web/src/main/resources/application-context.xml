@@ -16,5 +16,6 @@
     <context:annotation-config></context:annotation-config>
     <import resource="classpath*:spring-mvc.xml"/>
     <import resource="classpath*:redis-server.xml" />
+    <import resource="classpath*:spring-quartz.xml" />
 
 </beans>

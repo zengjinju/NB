@@ -152,6 +152,12 @@
         <artifactId>httpasyncclient</artifactId>
         <version>4.0.2</version>
       </dependency>
+      <!--quartz任务调度框架，具有可集群，可伸缩，高可用，负载均衡-->
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>2.2.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -198,6 +204,11 @@
       <groupId>org.logback-extensions</groupId>
       <artifactId>logback-ext-spring</artifactId>
       <version>0.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>3.1</version>
     </dependency>
   </dependencies>
 
