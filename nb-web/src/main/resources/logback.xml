@@ -53,12 +53,12 @@
 
     <logger name="com.zjj" additivity="false">
         <level value="DEBUG"/>
+        <appender-ref ref="COMMON" />
         <appender-ref ref="ERROR"/>
     </logger>
 
     <logger name="com.zjj.mapper" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="COMMON" />
         <appender-ref ref="DB" />
     </logger>
 
