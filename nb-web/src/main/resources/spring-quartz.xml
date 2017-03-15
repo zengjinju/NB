@@ -7,23 +7,23 @@
 		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
     <!--Quartz任务调度框架使用-->
-    <!--简单的任务调度方式-->
-    <bean id="simpleJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <!--指定任务执行的目标bean-->
-        <property name="targetObject" ref="oneBean" />
-        <!--指定任务执行类的目标方法-->
-        <property name="targetMethod" value="out" />
-    </bean>
+    <!--&lt;!&ndash;简单的任务调度方式&ndash;&gt;-->
+    <!--<bean id="simpleJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--&lt;!&ndash;指定任务执行的目标bean&ndash;&gt;-->
+        <!--<property name="targetObject" ref="oneBean" />-->
+        <!--&lt;!&ndash;指定任务执行类的目标方法&ndash;&gt;-->
+        <!--<property name="targetMethod" value="out" />-->
+    <!--</bean>-->
 
-    <!--任务触发器配置-->
-    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-        <!--配置具体要执行的jobDetail-->
-        <property name="jobDetail" ref="simpleJobDetail" />
-        <!--初始延迟时间 1s-->
-        <property name="startDelay" value="1000" />
-        <!--间隔执行时间每2s执行一次-->
-        <property name="repeatInterval" value="2000" />
-    </bean>
+    <!--&lt;!&ndash;任务触发器配置&ndash;&gt;-->
+    <!--<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">-->
+        <!--&lt;!&ndash;配置具体要执行的jobDetail&ndash;&gt;-->
+        <!--<property name="jobDetail" ref="simpleJobDetail" />-->
+        <!--&lt;!&ndash;初始延迟时间 1s&ndash;&gt;-->
+        <!--<property name="startDelay" value="1000" />-->
+        <!--&lt;!&ndash;间隔执行时间每2s执行一次&ndash;&gt;-->
+        <!--<property name="repeatInterval" value="2000" />-->
+    <!--</bean>-->
 
     <!--复杂的任务调度方式-->
     <!--jobDetail的方式，该配置方式可处理更加复杂的业务需求-->
@@ -49,14 +49,12 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="jobDetails">
             <list>
-                <ref bean="simpleJobDetail" />
                 <ref bean="complexJobDetail" />
             </list>
         </property>
 
         <property name="triggers">
             <list>
-                <ref bean="simpleTrigger" />
                 <ref bean="cronTrigger" />
             </list>
         </property>

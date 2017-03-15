@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration debug="false">
+
+    <property name="COMMON_PATTERN"
+              value="[%d{'MM-dd HH:mm:ss,SSS',GMT+8:00}] %-5p [%.10t] %logger{36}[%L] - %m%n" />
+    <property name="LOG_CHARSET" value="UTF-8" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>${LOG_CHARSET}</charset>
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="COMMON"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>common.log</file>
+        <append>true</append>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>common.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>${LOG_CHARSET}</charset>
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.FileAppender">
+        <file>error.log</file>
+        <append>false</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <charset>${LOG_CHARSET}</charset>
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>db.log</file>
+        <append>true</append>
+        <param name="datePattern" value=".yyyy-MM-dd" />
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>db.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>${LOG_CHARSET}</charset>
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.zjj" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
+
+    <logger name="com.zjj.mapper" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="COMMON" />
+        <appender-ref ref="DB" />
+    </logger>
+
+
+
+    <!--<logger name="com.tqmall.finance">-->
+        <!--<level value="INFO"/>-->
+    <!--</logger>-->
+
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="COMMON"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
