@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ShardedJedis;
 
 import java.util.HashMap;
 import java.util.Map;
