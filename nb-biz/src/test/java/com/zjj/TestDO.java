@@ -1,7 +1,5 @@
 package com.zjj;
 
-import lombok.Data;
-
 /**
  * Created by jinju.zeng on 17/2/24.
  */

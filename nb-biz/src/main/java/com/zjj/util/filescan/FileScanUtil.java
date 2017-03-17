@@ -57,6 +57,7 @@ public class FileScanUtil {
                 if (!list.isEmpty()) {
                     // 在当前的 ForkJoinPool 上调度所有的子任务
                     for (FileTask task : invokeAll(list)) {
+
                         task.join();
                     }
                 }

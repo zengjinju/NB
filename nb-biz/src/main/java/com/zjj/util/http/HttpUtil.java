@@ -2,12 +2,11 @@ package com.zjj.util.http;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
@@ -15,11 +14,17 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
@@ -161,5 +166,45 @@ public class HttpUtil {
             log.error("json解析出错,jsonStr=", jsonStr);
         }
         return object;
+    }
+
+    /**
+     * 返回json格式的数据
+     *
+     * @param url
+     * @return
+     */
+    public static String post(String url, List<NameValuePair> list, Header[] headers) {
+        if (CollectionUtils.isEmpty(list)) {
+            log.info("post 请求的数据为空");
+            return null;
+        }
+        try {
+            HttpPost post = new HttpPost(url);
+            if (headers != null && headers.length > 0) {
+                post.setHeaders(headers);
+            }
+            post.setEntity(new UrlEncodedFormEntity(list, defaultCharset));
+            log.info("当前post请求的参数：" );
+            Future<HttpResponse> result = httpclient.execute(post, null);
+            HttpResponse response = result.get();
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                log.error("请求返回状态码不为200，出现未知异常");
+                return null;
+            }
+            HttpEntity entity = response.getEntity();
+            return EntityUtils.toString(entity, defaultCharset);
+        } catch (Exception e) {
+            log.error("当前请求出现未知异常，" + e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args){
+        List<NameValuePair> list=new ArrayList<>();
+        list.add(new BasicNameValuePair("name","zjj"));
+        list.add(new BasicNameValuePair("id","1"));
+        post("www.baidu.com",list,null);
     }
 }

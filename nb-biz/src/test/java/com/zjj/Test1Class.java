@@ -1,12 +1,6 @@
 package com.zjj;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.*;
-import java.sql.ResultSet;
 
 /**
  * Created by jinju.zeng on 17/2/24.
