@@ -44,12 +44,23 @@ public class FileScanUtil {
                         list.add(new FileTask(subPath, extension));
                     } else if (fileName.endsWith(extension)) {
                         fileName = fileName.substring(0, fileName.indexOf("."));
-                        if (!map.containsKey(fileName)) {
-                            map.put(fileName, 1);
-                        } else {
-                            int count = map.get(fileName);
-                            count++;
-                            map.put(fileName, count);
+                        /**
+                         * 这里为什么要对fileName.intern()加锁而不对fileName加锁(个人见解)
+                         *  1. 由于fileName是一个局部变量在多线程环境下对fileName加synchronize锁，等同于加在不同的对象上
+                         *  2. 为什么要使用intern()方法，通过对intern()方法的工作机制的了解(先从缓冲池中查找是否有相同字符串的对象，如果
+                         *     没有则将该字符串放到缓冲池里面，并返回这个对象在缓冲池中的地址；如果有则直接返回这个对象的地址)，所以通过这个
+                         *     方法在多线程环境下对相同字符串加的是同一个对象的锁。
+                         * 此外还可以使用redis锁来实现对相同字符串的同步操作。
+                         * (这个synchronize锁相当于锁分段技术的实现，对有相同字符串的对象加锁)
+                         */
+                        synchronized (fileName.intern()) {
+                            if (!map.containsKey(fileName)) {
+                                map.put(fileName, 1);
+                            } else {
+                                int count = map.get(fileName);
+                                count++;
+                                map.put(fileName, count);
+                            }
                         }
                     }
                 }
@@ -57,7 +68,6 @@ public class FileScanUtil {
                 if (!list.isEmpty()) {
                     // 在当前的 ForkJoinPool 上调度所有的子任务
                     for (FileTask task : invokeAll(list)) {
-
                         task.join();
                     }
                 }
@@ -103,7 +113,7 @@ public class FileScanUtil {
     }
 
     public static void main(String[] args) {
-        FileScanUtil scan = new FileScanUtil(Paths.get("/Users/admin/project/qccr/maintaincore"), ".java");
+        FileScanUtil scan = new FileScanUtil(Paths.get("/Users/admin/test"), ".java");
         System.out.println(scan.count());
     }
 }
