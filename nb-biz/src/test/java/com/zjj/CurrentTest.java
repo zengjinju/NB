@@ -39,10 +39,5 @@ public class CurrentTest {
         }
         latch.await();
         System.out.println(sum);
-        for(;;) {
-            if (sum.get() == 2000000) {
-                break;
-            }
-        }
     }
 }

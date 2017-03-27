@@ -48,17 +48,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-aspects</artifactId>
-        <version>${org.springframework-version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
         <version>${org.springframework-version}</version>
       </dependency>
@@ -103,6 +92,36 @@
         <artifactId>spring-web</artifactId>
         <version>${org.springframework-version}</version>
       </dependency>
+
+      <!--添加aspectj的依赖 start-->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aspects</artifactId>
+        <version>${org.springframework-version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>1.8.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>1.8.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjtools</artifactId>
+        <version>1.8.9</version>
+      </dependency>
+      <!--end-->
+
       <dependency>
         <groupId>org.mybatis</groupId>
         <artifactId>mybatis-spring</artifactId>
@@ -268,45 +287,46 @@
         </executions>
       </plugin>
 
-      <!--<plugin>-->
-        <!--<groupId>org.codehaus.mojo</groupId>-->
-        <!--<artifactId>aspectj-maven-plugin</artifactId>-->
-        <!--<version>1.8</version>-->
-        <!--<configuration>-->
-          <!--<complianceLevel>${java-version}</complianceLevel>-->
-          <!--<encoding>UTF-8</encoding>-->
-          <!--<showWeaveInfo>true</showWeaveInfo>-->
-          <!--<forceAjcCompile>true</forceAjcCompile>-->
-          <!--<sources/>-->
-          <!--<weaveDirectories>-->
-            <!--<weaveDirectory>${project.build.directory}/classes</weaveDirectory>-->
-          <!--</weaveDirectories>-->
-          <!--<source>${java-version}</source>-->
-          <!--<target>${java-version}</target>-->
-          <!--<aspectLibraries>-->
-            <!--<aspectLibrary>-->
-              <!--<groupId>org.springframework</groupId>-->
-              <!--<artifactId>spring-aspects</artifactId>-->
-            <!--</aspectLibrary>-->
-          <!--</aspectLibraries>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<phase>process-classes</phase>-->
-            <!--<goals>-->
-              <!--<goal>compile</goal>-->
-              <!--<goal>test-compile</goal>-->
-            <!--</goals>-->
-          <!--</execution>-->
-        <!--</executions>-->
-        <!--<dependencies>-->
-          <!--<dependency>-->
-            <!--<groupId>org.aspectj</groupId>-->
-            <!--<artifactId>aspectjtools</artifactId>-->
-            <!--<version>${aspectj-version}</version>-->
-          <!--</dependency>-->
-        <!--</dependencies>-->
-      <!--</plugin>-->
+      <!--当需要添加aspectj依赖的时候，添加上下面的aspectj的maven插件-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>1.8</version>
+        <configuration>
+          <complianceLevel>${java-version}</complianceLevel>
+          <encoding>UTF-8</encoding>
+          <showWeaveInfo>true</showWeaveInfo>
+          <forceAjcCompile>true</forceAjcCompile>
+          <sources/>
+          <weaveDirectories>
+            <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+          </weaveDirectories>
+          <source>${java-version}</source>
+          <target>${java-version}</target>
+          <aspectLibraries>
+            <aspectLibrary>
+              <groupId>org.springframework</groupId>
+              <artifactId>spring-aspects</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj-version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
 </project>
