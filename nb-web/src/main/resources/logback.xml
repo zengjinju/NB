@@ -14,7 +14,7 @@
     </appender>
     <appender name="COMMON"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>common.log</file>
+        <file>./logs/common.log</file>
         <append>true</append>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -27,7 +27,7 @@
     </appender>
 
     <appender name="ERROR" class="ch.qos.logback.core.FileAppender">
-        <file>error.log</file>
+        <file>./logs/error.log</file>
         <append>false</append>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -39,7 +39,7 @@
     </appender>
 
     <appender name="DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>db.log</file>
+        <file>./logs/db.log</file>
         <append>true</append>
         <param name="datePattern" value=".yyyy-MM-dd" />
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -51,13 +51,13 @@
         </encoder>
     </appender>
 
-    <logger name="com.zjj" additivity="false">
+    <logger name="com.zjj.nb" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="COMMON" />
         <appender-ref ref="ERROR"/>
     </logger>
 
-    <logger name="com.zjj.dao" additivity="false">
+    <logger name="com.zjj.nb.dao" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="DB" />
     </logger>
@@ -74,6 +74,7 @@
         <appender-ref ref="COMMON"/>
         <appender-ref ref="ERROR"/>
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="DB" />
     </root>
 
 </configuration>
