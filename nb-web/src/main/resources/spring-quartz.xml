@@ -29,7 +29,7 @@
     <!--jobDetail的方式，该配置方式可处理更加复杂的业务需求-->
     <bean id="complexJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <!--jobClass 一个继承自 QuartzJobBean 的自定义类，需要实现 executeInternal 方法-->
-        <property name="jobClass" value="com.zjj.quartz.QuartzJob" />
+        <property name="jobClass" value="com.zjj.nb.biz.quartz.QuartzJob" />
         <!--jobDataMap 配置所有需要处理的任务类，把这些类注入到上面的quartzJob中-->
         <property name="jobDataMap">
             <map>

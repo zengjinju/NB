@@ -57,7 +57,7 @@
         <appender-ref ref="ERROR"/>
     </logger>
 
-    <logger name="com.zjj.mapper" additivity="false">
+    <logger name="com.zjj.dao" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="DB" />
     </logger>
