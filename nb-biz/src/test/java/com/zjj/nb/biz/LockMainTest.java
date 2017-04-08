@@ -17,8 +17,9 @@ public class LockMainTest {
             return t;
         }
     });
-    private static Integer j=0;
-    public static void main(String[] args){
+    private static Integer j = 0;
+
+    public static void main(String[] args) {
         final LockTest lock=new LockTest();
         for(int i=0;i<100000;i++){
             service.execute(new Runnable() {

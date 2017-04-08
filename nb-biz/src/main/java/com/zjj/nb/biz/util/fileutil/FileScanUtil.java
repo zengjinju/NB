@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.util.filescan;
+package com.zjj.nb.biz.util.fileutil;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
+ *
+ * 这个工具的作用是扫描某个路径下面的文件，统计文件的个数
+ * 优势是该工具使用了fork/join框架，使用多线程的方式来统计
+ * 提高了效率
  * Created by jinju.zeng on 2017/3/16.
  */
 @Slf4j

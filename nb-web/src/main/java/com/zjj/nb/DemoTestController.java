@@ -2,6 +2,9 @@ package com.zjj.nb;
 
 import com.zjj.nb.biz.manager.LockCallBack;
 import com.zjj.nb.biz.manager.RedisLock;
+import com.zjj.nb.dao.entity.userDAO;
+import com.zjj.nb.dao.mapper.userDAOMapper;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,8 @@ public class DemoTestController {
 
     @Autowired
     private RedisLock redisLock;
+    @Autowired
+    private userDAOMapper userdaoMapper;
 
     @RequestMapping("test")
     public void test() {
@@ -38,6 +43,15 @@ public class DemoTestController {
             e.printStackTrace();
         }
         return 1;
+    }
+
+    @RequestMapping("insert")
+    public void insert(){
+        userDAO userdao=new userDAO();
+        userdao.setUserName("zjj");
+        userdao.setUserPassword("123456");
+        userdao.setGmtCreate(DateTime.now().toDate());
+        userdaoMapper.insertSelective(userdao);
     }
 
 }
