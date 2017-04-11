@@ -31,7 +31,7 @@ public class SelectSockets {
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {
-                //阻塞到至少有一个通道在你注册的事件上就绪了
+                //阻塞到至少有一个通道在你注册的事件上就绪了,可能永远阻塞
                 int n = selector.select();
                 if (n == 0) {
                     continue;
@@ -44,8 +44,8 @@ public class SelectSockets {
                         ServerSocketChannel server = (ServerSocketChannel) key.channel();
                         SocketChannel channel = server.accept();
                         //向选择器中注册新的通道
-                        registerChannel(selector, channel, SelectionKey.OP_READ);
-                        sayHello(channel);
+                        channel.configureBlocking(false);
+                        channel.register(selector, SelectionKey.OP_READ);
                     }
                     //此密钥通道是否已准备好读取操作
                     if (key.isReadable()) {
@@ -53,18 +53,11 @@ public class SelectSockets {
                     }
 
                 }
+                it.remove();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void registerChannel(Selector selector, SelectableChannel channel, int ops) throws IOException {
-        if (channel == null) {
-            return;
-        }
-        channel.configureBlocking(false);
-        channel.register(selector, ops);
     }
 
     private static void sayHello(SocketChannel channel) throws IOException {

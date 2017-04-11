@@ -1,8 +1,9 @@
 package com.zjj.nb.biz.quartz;
 
-import lombok.Setter;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
@@ -10,11 +11,16 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  */
 public class QuartzJob extends QuartzJobBean {
 
-    @Setter
+    @Autowired
     private TwoBean twoBean;
+    @Value("${quartz.run}")
+    private String quartzRun;
+
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        twoBean.out();
+        if ("on".equals(quartzRun)) {
+            twoBean.out();
+        }
     }
 }

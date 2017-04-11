@@ -104,14 +104,11 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zjj.nb.dao.entity.userDAO" >
-    update nb_user
-    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      cteater = #{cteater,jdbcType=VARCHAR},
-      modifier = #{modifier,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
-      user_password = #{userPassword,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
+  <select id="selectByNameAndPwd" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from nb_user
+    where user_name=#{userName} and user_password=#{password} and is_deleted='N'
+  </select>
 </mapper>

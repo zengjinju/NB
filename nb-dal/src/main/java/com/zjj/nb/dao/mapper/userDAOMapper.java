@@ -1,6 +1,7 @@
 package com.zjj.nb.dao.mapper;
 
 import com.zjj.nb.dao.entity.userDAO;
+import org.apache.ibatis.annotations.Param;
 
 public interface userDAOMapper {
     int deleteByPrimaryKey(Integer id);
@@ -13,5 +14,5 @@ public interface userDAOMapper {
 
     int updateByPrimaryKeySelective(userDAO record);
 
-    int updateByPrimaryKey(userDAO record);
+    userDAO selectByNameAndPwd(@Param("userName") String userName, @Param("password") String password);
 }

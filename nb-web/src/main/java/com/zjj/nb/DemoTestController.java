@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by jinju.zeng on 17/2/22.
@@ -46,12 +47,19 @@ public class DemoTestController {
     }
 
     @RequestMapping("insert")
-    public void insert(){
-        userDAO userdao=new userDAO();
+    public void insert() {
+        userDAO userdao = new userDAO();
         userdao.setUserName("zjj");
         userdao.setUserPassword("123456");
         userdao.setGmtCreate(DateTime.now().toDate());
         userdaoMapper.insertSelective(userdao);
+    }
+
+    @RequestMapping("get")
+    @ResponseBody
+    public Object get() {
+        userDAO userdao=userdaoMapper.selectByNameAndPwd("abc", "123456");
+        return userdao;
     }
 
 }
