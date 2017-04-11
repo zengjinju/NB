@@ -112,29 +112,6 @@ public class HttpUtil {
         return null;
     }
 
-
-    /**
-     * http get请求
-     *
-     * @param url 请求的url
-     * @return
-     */
-//    public static String get(String url) {
-//        log.info("当前请求的url:" + url);
-//        String result = "";
-//        HttpGet request = new HttpGet(url);
-//        HttpClient client = new DefaultHttpClient();
-//        try {
-//            HttpResponse response = client.execute(request);
-//            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-//                result = EntityUtils.toString(response.getEntity(), "utf-8");
-//            }
-//        } catch (IOException e) {
-//            log.error("当前get请求发生异常:" + e);
-//        }
-//        return result;
-//    }
-
     /**
      * 通过http get请求返回json格式的字符串,并解析成特定的Java对象
      *
@@ -182,7 +159,7 @@ public class HttpUtil {
                 post.setHeaders(headers);
             }
             post.setEntity(new UrlEncodedFormEntity(list, defaultCharset));
-            log.info("当前post请求的参数：" );
+            log.info("当前post请求的参数：");
             Future<HttpResponse> result = httpclient.execute(post, null);
             HttpResponse response = result.get();
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -198,10 +175,10 @@ public class HttpUtil {
         return null;
     }
 
-    public static void main(String[] args){
-        List<NameValuePair> list=new ArrayList<>();
-        list.add(new BasicNameValuePair("name","zjj"));
-        list.add(new BasicNameValuePair("id","1"));
-        post("www.baidu.com",list,null);
+    public static void main(String[] args) {
+        List<NameValuePair> list = new ArrayList<>();
+        list.add(new BasicNameValuePair("name", "zjj"));
+        list.add(new BasicNameValuePair("id", "1"));
+        post("http://localhost:8080/nb/demo/post", list, null);
     }
 }

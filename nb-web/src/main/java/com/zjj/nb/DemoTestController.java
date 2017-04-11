@@ -2,12 +2,14 @@ package com.zjj.nb;
 
 import com.zjj.nb.biz.manager.LockCallBack;
 import com.zjj.nb.biz.manager.RedisLock;
+import com.zjj.nb.biz.util.ApplicationContextUtil;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -58,7 +60,14 @@ public class DemoTestController {
     @RequestMapping("get")
     @ResponseBody
     public Object get() {
-        userDAO userdao=userdaoMapper.selectByNameAndPwd("abc", "123456");
+        userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+        return userdao;
+    }
+
+    @RequestMapping(value = "post", method = RequestMethod.POST)
+    @ResponseBody
+    public Object post() {
+        userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
         return userdao;
     }
 

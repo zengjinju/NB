@@ -23,7 +23,6 @@ public class NbServer {
         context.setDescriptor("nb-web/src/main/webapp/WEB-INF/web.xml");
         context.setResourceBase("nb-web/src/main/webapp");
 
-        context.setMaxFormContentSize(10485760);
         context.setParentLoaderPriority(true);
         server.setHandler(context);
 
