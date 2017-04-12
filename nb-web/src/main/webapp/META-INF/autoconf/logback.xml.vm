@@ -4,54 +4,52 @@
 
     <property name="COMMON_PATTERN"
               value="[%d{'MM-dd HH:mm:ss,SSS',GMT+8:00}] %-5p [%.10t] %logger{36}[%L] - %m%n" />
-    <property name="LOG_CHARSET" value="${log.charset}" />
-    <property name="LOG_PATH" value="${log.root}" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <charset>${LOG_CHARSET}</charset>
-            <pattern>${COMMON_PATTERN}</pattern>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
     <appender name="COMMON"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/common.log</file>
+        <file>${log.root}/common.log</file>
         <append>true</append>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/common.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${log.root}/common.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
-            <charset>${LOG_CHARSET}</charset>
-            <pattern>${COMMON_PATTERN}</pattern>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
 
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/error.log</file>
+        <file>${log.root}/error.log</file>
         <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${log.root}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
         <encoder>
-            <charset>${LOG_CHARSET}</charset>
-            <pattern>${COMMON_PATTERN}</pattern>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
 
     <appender name="DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/db.log</file>
+        <file>${log.root}/db.log</file>
         <append>true</append>
         <param name="datePattern" value=".yyyy-MM-dd" />
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/db.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${log.root}/db.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
-            <charset>${LOG_CHARSET}</charset>
-            <pattern>${COMMON_PATTERN}</pattern>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
 

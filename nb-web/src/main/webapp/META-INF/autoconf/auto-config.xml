@@ -9,18 +9,20 @@
                   description="redis默认的数据库索引" />
         <property name="quartz.run" defaultValue="off"
                   description="定时任务的开关" />
-        <property name="log.root" defaultValue="./logs"
+        <property name="log.root" defaultValue="../logs"
                   description="日志的输出目录" />
         <property name="log.charset" defaultValue="UTF-8"
                   description="日志输出的默认编码方式" />
+        <property name="log.pattern" defaultValue="[%d{'MM-dd HH:mm:ss,SSS',GMT+8:00}] %-5p [%.10t] %logger{36}[%L] - %m%n"
+                  description="日志输出的格式" />
     </group>
 
     <script>
         <generate template="application.properties.vm"
                   destfile="WEB-INF/classes/application.properties"
                   charset="UTF-8" />
-        <!--<generate template="logback.xml.vm"-->
-                  <!--destfile="WEB-INF/classes/logback.xml"-->
-                  <!--charset="UTF-8" />-->
+        <generate template="logback.xml.vm"
+                  destfile="WEB-INF/classes/logback.xml"
+                  charset="UTF-8" />
     </script>
 </config>

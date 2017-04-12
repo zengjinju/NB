@@ -4,3 +4,4 @@ redis.db.index=${redis.db.index}
 quartz.run=${quartz.run}
 log.root=${log.root}
 log.charset=${log.charset}
+log.pattern=${log.pattern}
