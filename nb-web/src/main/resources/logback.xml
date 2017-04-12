@@ -5,7 +5,7 @@
     <property name="COMMON_PATTERN"
               value="[%d{'MM-dd HH:mm:ss,SSS',GMT+8:00}] %-5p [%.10t] %logger{36}[%L] - %m%n" />
     <property name="LOG_CHARSET" value="UTF-8" />
-    <property name="LOG_PATH" value="./logs" />
+    <property name="LOG_PATH" value="../logs" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

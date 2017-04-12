@@ -246,7 +246,7 @@
       <artifactId>lombok</artifactId>
       <version>1.12.6</version>
     </dependency>
-    <!--下面的4个jar，在引入jetty的时候必不可少的-->
+    <!--下面的4个jar，在引入jetty的时候必不可少的 start-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -273,6 +273,7 @@
       <artifactId>logback-ext-spring</artifactId>
       <version>0.1.2</version>
     </dependency>
+    <!-- end -->
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
@@ -331,7 +332,7 @@
         </executions>
       </plugin>
 
-      <!--当需要添加aspectj依赖的时候，添加上下面的aspectj的maven插件-->
+      <!--当需要添加aspectj依赖的时候，添加上下面的aspectj的maven插件 start-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
@@ -371,6 +372,7 @@
           </dependency>
         </dependencies>
       </plugin>
+      <!-- end -->
     </plugins>
   </build>
 </project>

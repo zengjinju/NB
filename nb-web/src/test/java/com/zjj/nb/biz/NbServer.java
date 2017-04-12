@@ -20,8 +20,10 @@ public class NbServer {
         *  因为配置了 working directory
         *  所以下面配置相对路径即可
         * */
-        context.setDescriptor("nb-web/src/main/webapp/WEB-INF/web.xml");
-        context.setResourceBase("nb-web/src/main/webapp");
+        context.setDescriptor("./nb-web/src/main/webapp/WEB-INF/web.xml");
+        context.setResourceBase("./nb-web/src/main/webapp");
+        //解决静态资源修改后不能重新加载的问题
+        context.setDefaultsDescriptor("./nb-web/src/test/resources/webdefault.xml");
 
         context.setParentLoaderPriority(true);
         server.setHandler(context);
