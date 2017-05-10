@@ -1,8 +1,7 @@
 package com.zjj.nb;
 
-import com.zjj.nb.biz.manager.LockCallBack;
-import com.zjj.nb.biz.manager.RedisLock;
-import com.zjj.nb.biz.util.ApplicationContextUtil;
+import com.zjj.nb.biz.manager.redis.LockCallBack;
+import com.zjj.nb.biz.manager.redis.RedisLock;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.joda.time.DateTime;
@@ -61,6 +60,7 @@ public class DemoTestController {
     @ResponseBody
     public Object get() {
         userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+        System.out.println(userdao);
         return userdao;
     }
 
@@ -69,6 +69,11 @@ public class DemoTestController {
     public Object post() {
         userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
         return userdao;
+    }
+
+    @RequestMapping("index")
+    public String index() {
+        return "index";
     }
 
 }

@@ -24,10 +24,10 @@ public class FileUtil {
      */
     public static void fileCopy(Path source, Path target) {
         try {
-            if(Files.notExists(source)){
-                throw new RuntimeException("资源文件不存在");
+            if (Files.notExists(source)) {
+                throw new RuntimeException("资源文件不存在" + source.getFileName());
             }
-            if(Files.notExists(target)){
+            if (Files.notExists(target)) {
                 //当目标文件不存在时，默认创建目标文件
                 Files.createFile(target);
             }
@@ -43,9 +43,9 @@ public class FileUtil {
         }
     }
 
-    public static void main(String[] args){
-        Path source=Paths.get("/Users/admin/test/service/AccountAmountService.java");
-        Path target=Paths.get("/Users/admin/test/service/abc.txt");
-        fileCopy(source,target);
+    public static void main(String[] args) {
+        Path source = Paths.get("/Users/admin/test/service/AccountAmountService.java");
+        Path target = Paths.get("/Users/admin/test/service/abc.txt");
+        fileCopy(source, target);
     }
 }

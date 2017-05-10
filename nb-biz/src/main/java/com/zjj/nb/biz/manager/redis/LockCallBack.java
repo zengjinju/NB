@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.manager;
+package com.zjj.nb.biz.manager.redis;
 
 /**
  * Created by admin on 17/2/28.

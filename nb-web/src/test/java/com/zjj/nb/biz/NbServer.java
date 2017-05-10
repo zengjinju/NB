@@ -8,7 +8,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
  */
 public class NbServer {
     public static void main(String[] args) {
-        Server server = new Server(8080);
+        Server server = new Server(8081);
 
         WebAppContext context = new WebAppContext();
 

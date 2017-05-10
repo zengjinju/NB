@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.manager;
+package com.zjj.nb.biz.manager.redis;
 
 import redis.clients.jedis.Jedis;
 

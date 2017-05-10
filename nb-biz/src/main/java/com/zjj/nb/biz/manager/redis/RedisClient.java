@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.manager;
+package com.zjj.nb.biz.manager.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
@@ -57,15 +57,14 @@ public class RedisClient {
      * 缓存时效 永久
      */
     public static int CACHE_EXP_FOREVER = 0;
-    /**
-     * 账务中心使用16
-     */
-    @Value("${redis.db.index}")
-    private int DEFAULT_DB_INDEX;
+
     /**
      * 缓存时效 6:小时
      */
     public static int CACHE_EXP_QUARTER_DAY = 6 * 60 * 60;
+
+    @Value("${redis.db.index}")
+    private int DEFAULT_DB_INDEX;
 
     private static final List<Class<?>> SIMPLE_CLASS_OBJ = Lists.newArrayList();
 
@@ -84,6 +83,7 @@ public class RedisClient {
 
     private Boolean set(final int dbindex, final String key, final int seconds, final Object value) {
         if (StringUtils.isEmpty(key) || value == null) {
+            log.info("在设置redis缓存时key或者value的值为空");
             return false;
         }
         Object result = runTask(new CallBack() {
@@ -105,6 +105,7 @@ public class RedisClient {
 
     public <T> T get(final String key, final Class<T> clazz) {
         if (StringUtils.isEmpty(key)) {
+            log.info("获取redis缓存中的内容时key为空");
             return null;
         }
         Object object = runTask(new CallBack() {
@@ -188,7 +189,7 @@ public class RedisClient {
                 jedisPool.returnResource(jedis);
             }
         } catch (Exception e) {
-            log.error("return back jedis failed, will fore close the  jedis.", e);
+            log.error("返回jedis资源异常，将强制关闭jedis", e);
             jedis.close();
         }
     }

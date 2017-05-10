@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.manager;
+package com.zjj.nb.biz.manager.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,6 @@ public class RedisLock {
     @Value("${redis.db.index}")
     private int DEFAULT_DB_INDEX;
 
-    //加锁标志
-    public static final String LOCKED = "TRUE";
     public static final long ONE_MILLI_NANOS = 1000000L;
     //默认超时时间（毫秒）
     public static final long DEFAULT_TIME_OUT = 15 * 1000;
@@ -93,7 +91,7 @@ public class RedisLock {
                 return map;
             }
 
-            //
+            //防止死锁
             Thread.sleep(3, r.nextInt(500));
         }
         map.put(BOOLEAN_VALUE, Boolean.FALSE);
