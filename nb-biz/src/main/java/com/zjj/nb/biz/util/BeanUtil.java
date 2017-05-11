@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by jinju.zeng on 17/2/22.
+ * Created by zjj on 17/2/22.
  */
 @Slf4j
 public class BeanUtil {
@@ -162,6 +162,8 @@ public class BeanUtil {
         userDAO userDAO=new userDAO();
         userDAO.setUserName("zjj");
         userDAO.setUserPassword("123");
-        byte[] bytes=serialize(userDAO);
+        //byte[] bytes=serialize(userDAO);
+        String str="zjj";
+        System.out.println(str.hashCode());
     }
 }
