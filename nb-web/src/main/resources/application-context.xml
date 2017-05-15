@@ -9,7 +9,10 @@
     <!--<context:property-placeholder order="40" ignore-unresolvable="true"-->
                                   <!--location="classpath:application.properties"/>-->
 
-    <context:component-scan base-package="com.zjj.nb" />
+    <context:component-scan base-package="com.zjj.nb" use-default-filters="true">
+        <!--表示不扫描指定路径下的被@Controller注解的类-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
     <!--ignore-unresolvable='true' 解决当加载多个属性文件的时候出现 Could not resolve placeholder的问题-->
     <context:property-placeholder location="classpath*:application.properties" ignore-unresolvable="true" />
     <!--开启注解功能-->

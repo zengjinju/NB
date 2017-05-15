@@ -1,4 +1,4 @@
-package com.zjj.nb;
+package com.zjj.nb.controller;
 
 import com.zjj.nb.biz.manager.redis.LockCallBack;
 import com.zjj.nb.biz.manager.redis.RedisLock;

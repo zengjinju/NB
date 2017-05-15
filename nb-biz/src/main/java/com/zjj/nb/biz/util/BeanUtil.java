@@ -66,7 +66,7 @@ public class BeanUtil {
                     checkParamisNull(result);
                 }
             } catch (Exception e) {
-                log.info(e.getMessage());
+                log.error(e.getMessage());
                 throw new RuntimeException(e.getMessage());
             }
         }
