@@ -1,5 +1,8 @@
 package com.zjj.nb.biz.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.google.common.collect.Maps;
 import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
 import com.zjj.nb.dao.entity.userDAO;
@@ -10,13 +13,8 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Created by zjj on 17/2/22.
@@ -156,6 +154,25 @@ public class BeanUtil {
             }
         }
         return null;
+    }
+
+    public static Object getMapGenericObj(Field field, JSONObject jsonObject){
+        Map map=null;
+        ParameterizedType pt=(ParameterizedType) field.getGenericType();
+        Type[] types=pt.getActualTypeArguments();
+        Class keyClazz=(Class)types[0];//获取Map中key的类型
+        Class valueClazz=(Class)types[1]; //获取Map中Value的类型
+        if(jsonObject!=null &&jsonObject.size()!=0){
+            map=new HashMap();
+            for(String key : jsonObject.keySet()){
+                Object value=jsonObject.get(key);
+                if(basicTypeList.contains(valueClazz)){
+                    value= TypeUtils.castToJavaBean(value,valueClazz);
+                }
+                map.put(key,value);
+            }
+        }
+        return map;
     }
 
     public static void main(String[] args){
