@@ -1,5 +1,7 @@
 package com.zjj.nb.controller;
 
+import com.zjj.nb.biz.manager.localcache.CacheService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +20,9 @@ public class DemoTest2Controller {
      * ThreadLocal的使用
      */
     private static final ThreadLocal<Map<String,Object>> THREAD_LOCAL=new ThreadLocal<>();
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @RequestMapping("out1")
@@ -51,6 +56,13 @@ public class DemoTest2Controller {
             THREAD_LOCAL.set(map);
         }
         return map;
+    }
+
+    @RequestMapping("cache")
+    public void cache(){
+        cacheService.get("zjj");
+        System.out.println(cacheService.get("zjj"));
+        System.out.println(cacheService.get("zjj"));
     }
 
 }

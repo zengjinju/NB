@@ -1,8 +1,6 @@
 package com.zjj.nb.biz.manager.threadPool;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.*;
 
 /**
  * Created by jinju.zeng on 2017/3/15.
@@ -13,5 +11,9 @@ public class ThreadPool {
 
     public static void execute(Runnable runnable){
         executorService.execute(runnable);
+    }
+
+    public Future submit(Callable callable){
+        return executorService.submit(callable);
     }
 }

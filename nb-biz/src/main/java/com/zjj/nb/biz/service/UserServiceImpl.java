@@ -2,6 +2,7 @@ package com.zjj.nb.biz.service;
 
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
+import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
