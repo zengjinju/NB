@@ -2,6 +2,7 @@ package com.zjj.nb.controller;
 
 import com.zjj.nb.biz.manager.redis.LockCallBack;
 import com.zjj.nb.biz.manager.redis.RedisLock;
+import com.zjj.nb.biz.util.IPUtils;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.joda.time.DateTime;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jinju.zeng on 17/2/22.
@@ -74,6 +77,12 @@ public class DemoTestController {
     @RequestMapping("index")
     public String index() {
         return "index";
+    }
+
+    @RequestMapping("ip")
+    public void testIp(HttpServletRequest request){
+        String ip=IPUtils.getRemoteAddress(request);
+        System.out.println(ip);
     }
 
 }
