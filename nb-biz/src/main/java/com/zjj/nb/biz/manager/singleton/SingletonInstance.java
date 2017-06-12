@@ -1,5 +1,7 @@
 package com.zjj.nb.biz.manager.singleton;
 
+import com.zjj.nb.biz.manager.threadPool.ThreadPool;
+
 /**
  * Created by jinju.zeng on 2017/4/24.
  */
@@ -21,5 +23,16 @@ public class SingletonInstance {
             }
         }
         return instance;
+    }
+
+    public static void main(String[] args){
+        for(int i=0;i<30;i++){
+            ThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getInstance();
+                }
+            });
+        }
     }
 }

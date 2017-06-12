@@ -13,7 +13,7 @@ public class ThreadPool {
         executorService.execute(runnable);
     }
 
-    public Future submit(Callable callable){
+    public static Future submit(Callable callable){
         return executorService.submit(callable);
     }
 }

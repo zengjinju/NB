@@ -20,15 +20,15 @@ public abstract class AbstractCacheService implements CacheService {
 
     @PostConstruct
     public void beforeInit(){
-        cacheLoader= CacheBuilder.newBuilder()
-                .maximumSize(MAXIMUM_SIZE)//最大缓存数
-                .refreshAfterWrite(10, TimeUnit.MINUTES)//缓存时间10分钟
-                .build(new CacheLoader<String, Optional>() {
-                    @Override
-                    public Optional load(String key) throws Exception {
-                        return Optional.fromNullable(process(key));
-                    }
-                });
+        cacheLoader=CacheBuilder.newBuilder()
+                                .maximumSize(MAXIMUM_SIZE)//最大缓存数
+                                .refreshAfterWrite(10, TimeUnit.MINUTES)//缓存时间10分钟
+                                .build(new CacheLoader<String, Optional>() {
+                                    @Override
+                                    public Optional load(String key) throws Exception {
+                                        return Optional.fromNullable(process(key));
+                                    }
+                                });
     }
 
     public Object process(String key){
