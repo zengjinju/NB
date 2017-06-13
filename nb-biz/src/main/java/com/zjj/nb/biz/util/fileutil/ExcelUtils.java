@@ -7,9 +7,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.util.CollectionUtils;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -47,7 +44,7 @@ public class ExcelUtils {
     }
 
     private static Map getRelationXlsWithObject(HSSFSheet sheet, Field[] fields) {
-        //保存xls文件中的标题字段和T对象中字段的对应关系
+        //保存excel文件中的标题字段和T对象中字段的对应关系
         Map<Integer, Integer> map = new HashMap<>();
         HSSFRow row = sheet.getRow(0);
         for (int i = 0; i < row.getLastCellNum(); i++) {

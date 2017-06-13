@@ -84,6 +84,7 @@ public class FileScanUtil {
     private static final ForkJoinPool pool = new ForkJoinPool();
     private static final FileTask task = new FileTask();
     private Path path;
+    //扩展名
     private String extension;
 
     public FileScanUtil(Path path, String extension) {
