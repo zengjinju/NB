@@ -24,6 +24,14 @@ public class ExcelUtils {
 
     public static <T> List<T> processXls(InputStream input, T t) {
         List<T> list = new ArrayList<>();
+        if(input==null){
+            log.error("请选择需要解析的Excel文件");
+            return null;
+        }
+        if(t==null){
+            log.error("解析对象不能为空");
+            return null;
+        }
         try {
             HSSFWorkbook wb = new HSSFWorkbook(input);
             HSSFSheet sheet = wb.getSheetAt(0);
@@ -69,6 +77,7 @@ public class ExcelUtils {
             for (int i = 0; i < row.getLastCellNum(); i++) {
                 Field field = fields[map.get(i)];
                 if (!field.isAccessible()) {
+                    //取消对Java的访问检查
                     field.setAccessible(true);
                 }
                 String value="";
@@ -87,9 +96,9 @@ public class ExcelUtils {
                 }
                 Type type = field.getGenericType();
                 if (type.equals(Integer.class)) {
-                    field.set(var1, Integer.parseInt(value));
+                    field.set(var1, (int)Double.parseDouble(value));
                 } else if (type.equals(Long.class)) {
-                    field.set(var1, Long.parseLong(value));
+                    field.set(var1, (long)Double.parseDouble(value));
                 } else if (type.equals(Double.class)) {
                     field.set(var1, Double.parseDouble(value));
                 } else if (type.equals(Byte.class)) {
