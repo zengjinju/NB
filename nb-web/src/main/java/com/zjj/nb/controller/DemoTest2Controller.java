@@ -60,7 +60,7 @@ public class DemoTest2Controller {
 
     @RequestMapping("cache")
     public void cache(){
-        cacheService.get("zjj");
+        System.out.println(cacheService.get("zjj"));
         System.out.println(cacheService.get("zjj"));
         System.out.println(cacheService.get("zjj"));
     }

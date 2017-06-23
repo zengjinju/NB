@@ -13,5 +13,5 @@ public @interface ExcelFieldAnnotation {
      * excel文件中的字段名
      * @return
      */
-    String XlsField() default "";
+    String ExcelField() default "";
 }

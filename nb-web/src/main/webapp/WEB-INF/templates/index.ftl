@@ -7,7 +7,7 @@
 
 
 <body>
-<h1>welcome</h1>
+<h1>welcome zjj</h1>
 <div id="main" style="width: 600px;height:400px;"></div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例

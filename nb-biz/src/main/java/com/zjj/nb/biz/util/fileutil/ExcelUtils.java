@@ -60,7 +60,7 @@ public class ExcelUtils {
             for (int j = 0; j < fields.length; j++) {
                 ExcelFieldAnnotation annotation = fields[j].getAnnotation(ExcelFieldAnnotation.class);
                 //当注解中的值和xls文件中的标题相同时设置对应关系
-                if (annotation != null && cell.getStringCellValue().equals(annotation.XlsField())) {
+                if (annotation != null && cell.getStringCellValue().equals(annotation.ExcelField())) {
                     map.put(i, j);
                     break;
                 }
