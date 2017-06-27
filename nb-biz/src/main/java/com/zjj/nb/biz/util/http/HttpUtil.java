@@ -52,7 +52,7 @@ public class HttpUtil {
 
         RequestConfig defaultRequestConfig = RequestConfig.custom().setStaleConnectionCheckEnabled(true)
                 //设置从主机读取数据超时（单位：毫秒）
-                .setConnectTimeout(10000)
+                .setConnectTimeout(30000)
                 //设置连接主机超时（单位：毫秒）
                 .setSocketTimeout(30000).build();
 
@@ -121,16 +121,8 @@ public class HttpUtil {
      * @return
      */
     public static <T> T get(String url, Class<T> clazz) {
-        HttpClientResult result = getUrl(url);
-        if (result == null) {
-            return null;
-        }
-        if (result.getStatusCode() != HttpStatus.SC_OK) {
-            log.info("get url not 200,code:{},result:{}", result.getStatusCode(), result.getResult());
-            return null;
-        }
-        String jsonStr = result.getResult();
-        if (jsonStr == null) {
+        String jsonStr=get(url);
+        if(jsonStr==null){
             return null;
         }
         T object = null;
@@ -140,6 +132,18 @@ public class HttpUtil {
             log.error("json解析出错,jsonStr=", jsonStr);
         }
         return object;
+    }
+
+    public static String get(String url){
+        HttpClientResult result = getUrl(url);
+        if (result == null) {
+            return null;
+        }
+        if (result.getStatusCode() != HttpStatus.SC_OK) {
+            log.info("get url not 200,code:{},result:{}", result.getStatusCode(), result.getResult());
+            return null;
+        }
+        return result.getResult();
     }
 
     /**

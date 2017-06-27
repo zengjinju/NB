@@ -1,6 +1,8 @@
 package com.zjj.nb.biz.util;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 import java.text.ParseException;
@@ -58,14 +60,33 @@ public class DateUtil {
         return new SimpleDateFormat(format).format(date);
     }
 
-    public static void main(String[] args){
-        Date t1= null,t2=null;
+    /**
+     * 计算两个日期之间相差的天数
+     *
+     * @param var1
+     * @param var2
+     * @return
+     */
+    public static int days(Date var1, Date var2) {
+        DateTime time1 = new DateTime(var1.getTime());
+        DateTime time2 = new DateTime(var2.getTime());
+        return Days.daysBetween(time1, time2).getDays();
+    }
+
+    public static int hours(Date var1, Date var2) {
+        DateTime time1 = new DateTime(var1.getTime());
+        DateTime time2 = new DateTime(var2.getTime());
+        return Hours.hoursBetween(time1, time2).getHours();
+    }
+
+    public static void main(String[] args) {
+        Date t1 = null, t2 = null;
         try {
-            t1 = new SimpleDateFormat(PATTERT_FORMAT).parse("2017-06-23 12:00:00");
-            t2=new SimpleDateFormat(PATTERT_FORMAT).parse("2017-06-24 12:00:00");
+            t1 = new SimpleDateFormat(PATTERT_FORMAT).parse("2017-05-17 12:00:00");
+            t2 = new SimpleDateFormat(PATTERT_FORMAT).parse("2017-06-24 12:00:00");
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Boolean result=between(t1,t2);
+        int n = days(t2, t1);
     }
 }
