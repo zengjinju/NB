@@ -23,6 +23,7 @@ public class CityProductInfo {
     private String cityId;
 
     private String cityName;
+
     /**
      * 区
      */

@@ -1,5 +1,6 @@
 package com.zjj.nb.biz.util.http;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.*;
@@ -52,9 +53,9 @@ public class HttpUtil {
 
         RequestConfig defaultRequestConfig = RequestConfig.custom().setStaleConnectionCheckEnabled(true)
                 //设置从主机读取数据超时（单位：毫秒）
-                .setConnectTimeout(120000)
+                .setConnectTimeout(30000)
                 //设置连接主机超时（单位：毫秒）
-                .setSocketTimeout(120000).build();
+                .setSocketTimeout(30000).build();
 
         httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
         httpClientBuilder.setMaxConnTotal(10);
@@ -87,7 +88,6 @@ public class HttpUtil {
                 String params = (URLEncodedUtils.format(nvps, defaultCharset));
                 url = url + "?" + params;
             }
-
             HttpGet httpGet = new HttpGet(url);
 
             Future<HttpResponse> future = httpclient.execute(httpGet, null);
@@ -163,11 +163,11 @@ public class HttpUtil {
                 post.setHeaders(headers);
             }
             post.setEntity(new UrlEncodedFormEntity(list, defaultCharset));
-            log.info("当前post请求的参数：");
+            log.info("当前post请求的参数："+ JSON.toJSONString(list));
             Future<HttpResponse> result = httpclient.execute(post, null);
             HttpResponse response = result.get();
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("请求返回状态码不为200，出现未知异常");
+                log.error("请求返回状态码不为200，出现未知异常。"+response.getStatusLine().getStatusCode());
                 return null;
             }
             HttpEntity entity = response.getEntity();

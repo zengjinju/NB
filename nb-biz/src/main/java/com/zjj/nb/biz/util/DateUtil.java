@@ -67,13 +67,13 @@ public class DateUtil {
      * @param var2
      * @return
      */
-    public static int days(Date var1, Date var2) {
+    public static int betweenDays(Date var1, Date var2) {
         DateTime time1 = new DateTime(var1.getTime());
         DateTime time2 = new DateTime(var2.getTime());
         return Days.daysBetween(time1, time2).getDays();
     }
 
-    public static int hours(Date var1, Date var2) {
+    public static int betweenHours(Date var1, Date var2) {
         DateTime time1 = new DateTime(var1.getTime());
         DateTime time2 = new DateTime(var2.getTime());
         return Hours.hoursBetween(time1, time2).getHours();
@@ -87,6 +87,6 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        int n = days(t2, t1);
+        int n = betweenDays(t2, t1);
     }
 }
