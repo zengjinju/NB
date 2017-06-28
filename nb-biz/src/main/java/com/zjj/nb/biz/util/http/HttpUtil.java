@@ -52,9 +52,9 @@ public class HttpUtil {
 
         RequestConfig defaultRequestConfig = RequestConfig.custom().setStaleConnectionCheckEnabled(true)
                 //设置从主机读取数据超时（单位：毫秒）
-                .setConnectTimeout(30000)
+                .setConnectTimeout(120000)
                 //设置连接主机超时（单位：毫秒）
-                .setSocketTimeout(30000).build();
+                .setSocketTimeout(120000).build();
 
         httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
         httpClientBuilder.setMaxConnTotal(10);
