@@ -6,8 +6,6 @@ import lombok.Setter;
 /**
  * Created by admin on 2017/6/27.
  */
-@Getter
-@Setter
 public class CityProductInfo {
 
     /**
@@ -43,4 +41,68 @@ public class CityProductInfo {
      * 公司电话
      */
     private String entPhone;
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getEntName() {
+        return entName;
+    }
+
+    public void setEntName(String entName) {
+        this.entName = entName;
+    }
+
+    public String getEntAddress() {
+        return entAddress;
+    }
+
+    public void setEntAddress(String entAddress) {
+        this.entAddress = entAddress;
+    }
+
+    public String getEntPhone() {
+        return entPhone;
+    }
+
+    public void setEntPhone(String entPhone) {
+        this.entPhone = entPhone;
+    }
 }

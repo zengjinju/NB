@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!--mq消息生产者-->
+    <bean id="defaultMqProduct" class="com.alibaba.rocketmq.client.producer.DefaultMQProducer">
+        <property name="producerGroup" value="${mq_group}"/>
+        <property name="namesrvAddr" value="${name_server}"/>
+        <property name="instanceName" value="${app_name}"/>
+    </bean>
+
+    <!--mq消息消费者-->
+    <bean id="defaultMqConsumer" class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer">
+        <property name="consumerGroup" value="${mq_group}" />
+        <property name="namesrvAddr" value="${name_server}" />
+        <property name="instanceName" value="${app_name}" />
+    </bean>
+</beans>

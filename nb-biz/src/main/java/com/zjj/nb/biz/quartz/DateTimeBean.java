@@ -14,6 +14,6 @@ public class DateTimeBean {
 
     public void quartzOut(){
         DateTime now=DateTime.now();
-        int days= DateUtil.days(INIT_TIME.toDate(),now.toDate());
+        int days= DateUtil.betweenDays(INIT_TIME.toDate(),now.toDate());
     }
 }
