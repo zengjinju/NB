@@ -155,24 +155,27 @@ public class SearchBean {
     }
 
     public static void main(String[] args) {
-        getProvinceMap();
-        try {
-            countDown.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        int sum = 0;
-        for (List<CityInfo> list : map.values()) {
-            sum += list.size();
-        }
-        CountDownLatch enterpriseCountDown = new CountDownLatch(sum);
-        showEnterprise(enterpriseCountDown);
-        try {
-            enterpriseCountDown.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        writeExcel();
+//        getProvinceMap();
+//        try {
+//            countDown.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        int sum = 0;
+//        for (List<CityInfo> list : map.values()) {
+//            sum += list.size();
+//        }
+//        CountDownLatch enterpriseCountDown = new CountDownLatch(sum);
+//        showEnterprise(enterpriseCountDown);
+//        try {
+//            enterpriseCountDown.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        writeExcel();
+
+        String str=HttpUtil.get("https://www.tuhu.cn/shops/yunnan25.aspx");
+        System.out.println(str);
     }
 
     /**

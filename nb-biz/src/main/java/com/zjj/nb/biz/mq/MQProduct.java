@@ -19,14 +19,14 @@ public class MQProduct {
     private static final String GROUP = "nb-group";
 
     public static void main(String[] args) {
-        DefaultMQProducer producer = new DefaultMQProducer(GROUP);
+        final DefaultMQProducer producer = new DefaultMQProducer(GROUP);
         producer.setNamesrvAddr(SERVER_ADDR);
         producer.setInstanceName(INSTANCE_NAME);
         try {
             producer.start();
             Message msg = new Message("test-nb", "TagA", "hello_zjj_abc".getBytes());
             SendResult result = producer.send(msg);
-            log.info("mq send message id:{},status:{}",result.getMsgId(),result.getSendStatus());
+            log.info("mq send success id:{},status:{}",result.getMsgId(),result.getSendStatus());
         } catch (MQClientException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -36,6 +36,12 @@ public class MQProduct {
         } catch (MQBrokerException e) {
             e.printStackTrace();
         }
-        producer.shutdown();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                producer.shutdown();
+            }
+        }));
+
     }
 }
