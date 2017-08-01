@@ -27,6 +27,7 @@ public class MQConsumer {
     private static final Map<String, MqCallBack> map = new ConcurrentHashMap<>();
     private static DefaultMQPushConsumer CONSUMER=null;
 
+    //@PostConstruct
     private void init(final String tags) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(GROUP);
         consumer.setNamesrvAddr(SERVER_ADDR);
@@ -51,6 +52,7 @@ public class MQConsumer {
             }
         });
         try {
+            //接受topic为test-nb下的所有tag的消息
             consumer.subscribe("test-nb", tags);
             CONSUMER=consumer;
         } catch (MQClientException e) {

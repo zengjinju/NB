@@ -41,4 +41,9 @@
     <servlet-name>spring</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+  <!--注册自定义的监听器-->
+  <listener>
+    <listener-class>com.zjj.nb.biz.listener.ServletRequestListenerImpl</listener-class>
+  </listener>
 </web-app>

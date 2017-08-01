@@ -31,10 +31,12 @@ public class UserServiceImpl implements UserService,ApplicationContextAware,Bean
     private BeanFactory beanFactory;
     private ResourceLoader resourceLoader;
 
+
     @PostConstruct
     private void beforeInit(){
         UserService userService=(UserService) beanFactory.getBean(this.getClass());
         userService.toString();
+
     }
 
     @Override

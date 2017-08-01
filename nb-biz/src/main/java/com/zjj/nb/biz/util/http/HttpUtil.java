@@ -15,6 +15,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
@@ -23,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 
@@ -152,8 +154,8 @@ public class HttpUtil {
      * @param url
      * @return
      */
-    public static String post(String url, List<NameValuePair> list, Header[] headers) {
-        if (CollectionUtils.isEmpty(list)) {
+    public static String post(String url, Map<String,String> map , Header[] headers) {
+        if (CollectionUtils.isEmpty(map)) {
             log.info("post 请求的数据为空");
             return null;
         }
@@ -161,6 +163,10 @@ public class HttpUtil {
             HttpPost post = new HttpPost(url);
             if (headers != null && headers.length > 0) {
                 post.setHeaders(headers);
+            }
+            List<NameValuePair> list=new ArrayList<>();
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                list.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
             }
             post.setEntity(new UrlEncodedFormEntity(list, defaultCharset));
             log.info("当前post请求的参数："+ JSON.toJSONString(list));
@@ -183,6 +189,7 @@ public class HttpUtil {
         List<NameValuePair> list = new ArrayList<>();
         list.add(new BasicNameValuePair("name", "zjj"));
         list.add(new BasicNameValuePair("id", "1"));
-        post("http://localhost:8080/nb/demo/post", list, null);
+        Header header=new BasicHeader("","");
+        post("http://localhost:8080/nb/demo/post", null, null);
     }
 }

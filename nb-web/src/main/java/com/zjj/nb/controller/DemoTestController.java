@@ -1,7 +1,11 @@
 package com.zjj.nb.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.zjj.nb.biz.manager.redis.LockCallBack;
 import com.zjj.nb.biz.manager.redis.RedisLock;
+import com.zjj.nb.biz.mq.MQConsumer;
+import com.zjj.nb.biz.mq.MqCallBack;
 import com.zjj.nb.biz.util.IPUtils;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
@@ -25,6 +29,8 @@ public class DemoTestController {
     private RedisLock redisLock;
     @Autowired
     private userDAOMapper userdaoMapper;
+    @Autowired
+    private MQConsumer mqConsumer;
 
     @RequestMapping("test")
     public void test() {
@@ -83,6 +89,22 @@ public class DemoTestController {
     public void testIp(HttpServletRequest request){
         String ip=IPUtils.getRemoteAddress(request);
         System.out.println(ip);
+    }
+
+    @RequestMapping("mq")
+    public void testMq() throws MQClientException {
+        mqConsumer.register(new MqCallBack() {
+            @Override
+            public String getTags() {
+                return "TagA";
+            }
+
+            @Override
+            public void doCallBack() {
+                userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+                System.out.println(JSON.toJSONString(userdao));
+            }
+        });
     }
 
 }
