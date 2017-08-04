@@ -9,4 +9,6 @@ import lombok.Data;
 public class BasicClass {
 
     private String source;
+
+
 }

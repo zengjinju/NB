@@ -15,6 +15,7 @@ import java.util.Date;
 public class DateUtil {
 
     private static final String PATTERT_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final SimpleDateFormat DEFAULT_DATE_FORMAT=new SimpleDateFormat();
 
     /**
      * 判断当前日期是否在两个日期之间
@@ -57,7 +58,8 @@ public class DateUtil {
             //使用默认的日期格式
             format = PATTERT_FORMAT;
         }
-        return new SimpleDateFormat(format).format(date);
+        DEFAULT_DATE_FORMAT.applyPattern(format);
+        return DEFAULT_DATE_FORMAT.format(date);
     }
 
     /**
