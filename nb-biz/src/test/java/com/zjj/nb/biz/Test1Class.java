@@ -9,8 +9,10 @@ public class Test1Class {
 
 
     public static void main(String[] args) throws Exception {
-        String str1=new StringBuilder("abc").append("efg").toString();
-        String str2="abcefg";
-        System.out.println(str1.intern()==str2);
+        final String a="hello";
+        final String b=" world";
+        String c=a+b;
+        String d="hello world";
+        System.out.println(c==d);
     }
 }

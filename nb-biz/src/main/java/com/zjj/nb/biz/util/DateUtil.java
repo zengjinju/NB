@@ -15,7 +15,13 @@ import java.util.Date;
 public class DateUtil {
 
     private static final String PATTERT_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final SimpleDateFormat DEFAULT_DATE_FORMAT=new SimpleDateFormat();
+    //simpleDateFormat的创建是非常昂贵的，用threadLocal来保存变量可以实现线程间的安全
+    private static final ThreadLocal<SimpleDateFormat> dateFormatLocal = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat();
+        }
+    };
 
     /**
      * 判断当前日期是否在两个日期之间
@@ -51,15 +57,22 @@ public class DateUtil {
     }
 
     public static String parseDateToString(Date date, String format) {
-        if (date == null) {
-            throw new RuntimeException("日期转换时，不能为空");
-        }
         if (format == null || "".equals(format)) {
             //使用默认的日期格式
             format = PATTERT_FORMAT;
         }
-        DEFAULT_DATE_FORMAT.applyPattern(format);
-        return DEFAULT_DATE_FORMAT.format(date);
+        SimpleDateFormat dateFormat = getSimpleDateFormat();
+        dateFormat.applyPattern(format);
+        return date != null ? dateFormat.format(date) : "";
+    }
+
+    private static SimpleDateFormat getSimpleDateFormat() {
+        SimpleDateFormat dateFormat = dateFormatLocal.get();
+        if (dateFormat == null) {
+            dateFormat = new SimpleDateFormat();
+            dateFormatLocal.set(dateFormat);
+        }
+        return dateFormat;
     }
 
     /**

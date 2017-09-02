@@ -11,7 +11,7 @@
   </context-param>
 
   <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>com.zjj.nb.listener.WebAppContextLoaderListener</listener-class>
   </listener>
 
   <filter>
@@ -44,6 +44,6 @@
 
   <!--注册自定义的监听器-->
   <listener>
-    <listener-class>com.zjj.nb.biz.listener.ServletRequestListenerImpl</listener-class>
+    <listener-class>com.zjj.nb.listener.ServletRequestListenerImpl</listener-class>
   </listener>
 </web-app>

@@ -15,4 +15,6 @@ public interface userDAOMapper {
     int updateByPrimaryKeySelective(userDAO record);
 
     userDAO selectByNameAndPwd(@Param("userName") String userName, @Param("password") String password);
+
+    int updateId();
 }

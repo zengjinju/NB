@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.google.common.collect.Maps;
 import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
+import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
 import com.zjj.nb.dao.entity.userDAO;
 import lombok.extern.slf4j.Slf4j;
 

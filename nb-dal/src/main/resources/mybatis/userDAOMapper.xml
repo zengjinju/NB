@@ -111,4 +111,8 @@
     from nb_user
     where user_name=#{userName} and user_password=#{password} and is_deleted='N'
   </select>
+
+  <update id="updateId">
+    update nb_user set id=id+1 where pid=1;
+  </update>
 </mapper>

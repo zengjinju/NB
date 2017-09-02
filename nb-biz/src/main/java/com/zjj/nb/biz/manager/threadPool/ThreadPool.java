@@ -7,7 +7,7 @@ import java.util.concurrent.*;
  */
 public class ThreadPool {
 
-    private static final ExecutorService executorService= Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);
+    private static final ExecutorService executorService= Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
 
     public static void execute(Runnable runnable){
         executorService.execute(runnable);

@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.listener;
+package com.zjj.nb.listener;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
@@ -14,14 +14,14 @@ public class ServletRequestListenerImpl implements ServletRequestListener {
     public void requestDestroyed(ServletRequestEvent sre) {
         ServletContext context=sre.getServletContext();
         HttpServletRequest request=(HttpServletRequest)sre.getServletRequest();
-        Long start=(Long) context.getAttribute("startTime");
+        Long start=(Long) context.getAttribute("servletRequestCreateTime");
         String uri=request.getRequestURI();
-        System.out.println("当前请求URL："+uri+"的耗时时间："+(System.nanoTime()-start)/1000);
+        System.out.println("当前请求URL："+uri+", 耗时时间："+(System.currentTimeMillis()-start)+"ms");
     }
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
         ServletContext context=sre.getServletContext();
-        context.setAttribute("startTime",System.nanoTime());
+        context.setAttribute("servletRequestCreateTime",System.currentTimeMillis());
     }
 }

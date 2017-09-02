@@ -10,4 +10,6 @@ public interface UserService {
     userDAO selectByUserNameAndPwd(String userName,String pwd);
 
     int insert(userDAO userDAO);
+
+    Boolean get(String userName);
 }

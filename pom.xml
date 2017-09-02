@@ -237,6 +237,20 @@
         <artifactId>rocketmq-client</artifactId>
         <version>3.5.9</version>
       </dependency>
+
+      <!--hystrix 熔断器-->
+      <dependency>
+        <groupId>com.netflix.hystrix</groupId>
+        <artifactId>hystrix-core</artifactId>
+        <version>1.5.11</version>
+      </dependency>
+
+      <!--dom4j 解析XML-->
+      <dependency>
+        <groupId>dom4j</groupId>
+        <artifactId>dom4j</artifactId>
+        <version>1.6.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

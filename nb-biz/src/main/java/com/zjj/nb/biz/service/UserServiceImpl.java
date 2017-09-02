@@ -51,6 +51,12 @@ public class UserServiceImpl implements UserService,ApplicationContextAware,Bean
         return userdaoMapper.insertSelective(userDAO);
     }
 
+    @Override
+    public Boolean get(String userName) {
+
+        return null;
+    }
+
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {

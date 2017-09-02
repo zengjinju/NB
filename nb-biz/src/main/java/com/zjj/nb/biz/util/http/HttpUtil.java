@@ -23,6 +23,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -149,12 +150,23 @@ public class HttpUtil {
     }
 
     /**
+     * 使用默认的编码方式发送Post请求
+     * @param url
+     * @param map
+     * @param headers
+     * @return
+     */
+    public static String post(String url,Map<String,String> map,Header[] headers){
+        return post(url,map,headers,defaultCharset);
+    }
+
+    /**
      * 返回json格式的数据
      *
      * @param url
      * @return
      */
-    public static String post(String url, Map<String,String> map , Header[] headers) {
+    public static String post(String url, Map<String,String> map , Header[] headers,String charset) {
         if (CollectionUtils.isEmpty(map)) {
             log.info("post 请求的数据为空");
             return null;
@@ -168,16 +180,16 @@ public class HttpUtil {
             for(Map.Entry<String,String> entry : map.entrySet()){
                 list.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
             }
-            post.setEntity(new UrlEncodedFormEntity(list, defaultCharset));
+            post.setEntity(new UrlEncodedFormEntity(list,charset));
             log.info("当前post请求的参数："+ JSON.toJSONString(list));
             Future<HttpResponse> result = httpclient.execute(post, null);
             HttpResponse response = result.get();
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("请求返回状态码不为200，出现未知异常。"+response.getStatusLine().getStatusCode());
+                log.error("response code is not 200,code:{},result:{}",response.getStatusLine().getStatusCode(),response.getEntity().toString());
                 return null;
             }
             HttpEntity entity = response.getEntity();
-            return EntityUtils.toString(entity, defaultCharset);
+            return EntityUtils.toString(entity, charset);
         } catch (Exception e) {
             log.error("当前请求出现未知异常，" + e);
             e.printStackTrace();
@@ -190,6 +202,8 @@ public class HttpUtil {
         list.add(new BasicNameValuePair("name", "zjj"));
         list.add(new BasicNameValuePair("id", "1"));
         Header header=new BasicHeader("","");
-        post("http://localhost:8080/nb/demo/post", null, null);
+        //post("http://localhost:8080/nb/demo/post", null, null);
+        String result=post("http://172.16.20.8:449",new HashMap<String, String>(),null);
+        System.out.println(result);
     }
 }

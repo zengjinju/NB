@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.util;
+package com.zjj.nb.biz.util.applicationcontext;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationContextUtil implements ApplicationContextAware{
 
-    private ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext=applicationContext;
     }
 
-    public Object getBean(String beanName){
+    public static Object getBean(String beanName){
         return applicationContext.getBean(beanName);
     }
 }
