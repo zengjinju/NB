@@ -2,16 +2,15 @@ package com.zjj.nb.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.zjj.nb.biz.manager.ehcache.ICacheProxy;
+import com.zjj.nb.biz.manager.ehcache.TestCacheBean;
+import com.zjj.nb.biz.manager.hystrix.UserCommand;
 import com.zjj.nb.biz.manager.redis.LockCallBack;
 import com.zjj.nb.biz.manager.redis.RedisLock;
 import com.zjj.nb.biz.manager.threadPool.ThreadPool;
 import com.zjj.nb.biz.mq.MQConsumer;
 import com.zjj.nb.biz.mq.MqCallBack;
 import com.zjj.nb.biz.service.UserService;
-import com.zjj.nb.biz.service.icbctransfer.PayEntService;
-import com.zjj.nb.biz.service.icbctransfer.SettleMentDO;
-import com.zjj.nb.biz.service.icbctransfer.TransferConstantsService;
-import com.zjj.nb.biz.util.BeanUtil;
 import com.zjj.nb.biz.util.IPUtils;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextUtil;
@@ -45,9 +44,9 @@ public class DemoTestController {
     @Autowired
     private MQConsumer mqConsumer;
     @Autowired
-    private PayEntService payEntService;
-    @Autowired
     private userDAOMapper userDAOMapper;
+    @Autowired
+    private ICacheProxy cacheProxy;
 
     @RequestMapping("test")
     public void test() {
@@ -127,69 +126,14 @@ public class DemoTestController {
         });
     }
 
-    @RequestMapping("icbctransfer")
-    public void transfer() {
-        List<SettleMentDO> list=new ArrayList<>();
-        SettleMentDO settleMentDO = new SettleMentDO();
-        settleMentDO.setTransCode("PAYENT");
-        settleMentDO.setCis("120290001066991");
-        settleMentDO.setBankCode("102");
-        settleMentDO.setId("201701.y.1202");
-        settleMentDO.setTranDate(new Date());
-        settleMentDO.setTranTime(new Date());
-        settleMentDO.setPackageId(TransferConstantsService.getPackageId());
-        settleMentDO.setOnlBatF("1");
-        settleMentDO.setSettleMode("0");
-        settleMentDO.setTotalNum("1");
-        settleMentDO.setTotalAmt("1000");
-        settleMentDO.setSignTime(new Date());
-        settleMentDO.setiSeqno("1");
-        settleMentDO.setPayType("2");
-        settleMentDO.setPayAccNo("1202022719927388888");
-        settleMentDO.setPayAccNameCN("时贱醇恍剃牙桔好猜迹灿描寂件粉");
-        //settleMentDO.setRecAccNo("6214835715666192");
-        settleMentDO.setRecAccNo("1202002119900011896");
-        //settleMentDO.setRecAccNo("6222021202046457728");
-        settleMentDO.setRecAccNameCN("时贱醇良操深积芭迹灿件粉");
-        settleMentDO.setSysIOFlg("1");
-        settleMentDO.setProp("0");
-        if(settleMentDO.getSysIOFlg().equals("2")){
-            settleMentDO.setProp("1");
-            settleMentDO.setRecCityName("杭州");
-            settleMentDO.setRecBankNo("");
-            settleMentDO.setRecBankName("高新支行");
-        }
-        settleMentDO.setCurrType("001");
-        settleMentDO.setPayAmt("1000");
-//        settleMentDO.setRecICBCCode("1202");
-        //对私交易的时候要填写下面两个字段中的一个
-        //settleMentDO.setUseCode("123");
-        if(settleMentDO.getProp().equals("1")) {
-            settleMentDO.setUseCN("对私交易");
-        }
-        list.add(settleMentDO);
-        SettleMentDO settleMentDO1=new SettleMentDO();
-        BeanUtils.copyProperties(settleMentDO,settleMentDO1);
-        settleMentDO1.setRecAccNo("1202020209003406812");
-        settleMentDO1.setRecAccNameCN("时贱疤他芭并漏亭迹灿件粉 ");
-        settleMentDO1.setiSeqno("2");
-        //list.add(settleMentDO1);
-        payEntService.dealPayEnt(list);
+    @RequestMapping("ehcache")
+    public void ehcache(){
+        System.out.println(cacheProxy.getValue(TestCacheBean.CACHE_KET));
     }
 
-    @RequestMapping("search")
-    public void update(){
-        SettleMentDO settleMentDO=new SettleMentDO();
-        settleMentDO.setTransCode("QPAYENT");
-        settleMentDO.setCis("120290001066991");
-        settleMentDO.setBankCode("102");
-        settleMentDO.setId("201701.y.1202");
-        settleMentDO.setTranDate(new Date());
-        settleMentDO.setTranTime(new Date());
-        settleMentDO.setOldPackageId("201708310000193");
-        settleMentDO.setiSeqno("2");
-        settleMentDO.setPackageId(TransferConstantsService.getPackageId());
-        payEntService.search(settleMentDO,"CMM790142456");
+    @RequestMapping("hystrix")
+    public void hystrixTest(){
+        userDAO userdao=new UserCommand("zjj","123456").execute();
     }
 
 }

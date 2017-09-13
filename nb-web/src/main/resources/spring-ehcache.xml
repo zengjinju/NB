@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!--通过spring提供的ehcache集成方案集成ehcache-->
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation">
+            <value>classpath:ehcache.xml</value>
+        </property>
+    </bean>
+
+    <bean id="cacheFactoryBean" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="ehCacheManager" />
+        <property name="cacheName" value="cache_bean" />
+    </bean>
+    <bean id="cacheProxy" class="com.zjj.nb.biz.manager.ehcache.CacheProxy">
+        <property name="cache" ref="cacheFactoryBean" />
+    </bean>
+</beans>

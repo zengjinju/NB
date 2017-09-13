@@ -1,0 +1,1 @@
+hystrixFilter=com.zjj.nb.biz.dubbohystrix.HystrixFilter

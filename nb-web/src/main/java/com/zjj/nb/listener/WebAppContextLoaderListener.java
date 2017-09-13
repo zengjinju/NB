@@ -20,15 +20,20 @@ public class WebAppContextLoaderListener extends ContextLoaderListener {
     public WebAppContextLoaderListener(){
         super();
     }
-    public WebAppContextLoaderListener(WebApplicationContext event){
-        super(event);
-    }
+//    public WebAppContextLoaderListener(WebApplicationContext event){
+//        super(event);
+//    }
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
         super.contextInitialized(event);
 
         WebApplicationContext webApplicationContext= WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext());
+        /**
+         * 这种方式的设置有缺陷，这种方式是只有在IOC容器完成初始化，和所有bean的创建，依赖注入，初始化后才把IOC容器
+         * 设置到applicationContextHelper中的applicationContext中。所以如果在bean的初始化方法中调用applicationContextHelper
+         * 获取某个bean会出现NullPointException
+         */
         applicationContextHelper.setApplicationContext(webApplicationContext);
     }
 
