@@ -6,6 +6,7 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by jinju.zeng on 2017/7/3.
  */
 @Service
-public class MQConsumer {
+public class MQConsumer implements InitializingBean {
 
     private static final String SERVER_ADDR = "localhost:9876";
     private static final String INSTANCE_NAME = "NB";
@@ -27,42 +28,9 @@ public class MQConsumer {
     private static final Map<String, MqCallBack> map = new ConcurrentHashMap<>();
     private static DefaultMQPushConsumer CONSUMER=null;
 
-    //@PostConstruct
-    private void init(final String tags) {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(GROUP);
-        consumer.setNamesrvAddr(SERVER_ADDR);
-        consumer.setInstanceName(INSTANCE_NAME);
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-
-            @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-                for (MessageExt message : list) {
-                    try {
-                        System.out.println("received mq message ：" + new String(message.getBody(), "utf-8"));
-                        MqCallBack callBack= map.get(tags);
-                        //具体的回调业务处理(在客户端实现回调方法的具体逻辑)
-                        if(callBack!=null){
-                            callBack.doCallBack();
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            }
-        });
-        try {
-            //接受topic为test-nb下的所有tag的消息
-            consumer.subscribe("test-nb", tags);
-            CONSUMER=consumer;
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void start(String tags) throws MQClientException {
-        init(tags);
-        CONSUMER.start();
+//        init(tags,consumer);
+//        consumer.start();
     }
 
     /**
@@ -78,6 +46,39 @@ public class MQConsumer {
                 map.put(callBack.getTags(), callBack);
                 start(callBack.getTags());
             }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        DefaultMQPushConsumer consumer=new DefaultMQPushConsumer(GROUP);
+        consumer.setNamesrvAddr(SERVER_ADDR);
+        consumer.setInstanceName(INSTANCE_NAME);
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+                for (MessageExt message : list) {
+                    try {
+                        System.out.println("received mq message ：" + new String(message.getBody(), "utf-8"));
+                        MqCallBack callBack= map.get(message.getTags());
+                        //具体的回调业务处理(在客户端实现回调方法的具体逻辑)
+                        if(callBack!=null){
+                            callBack.doCallBack();
+                        }
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
+        try {
+            //接受topic为test-nb下的所有tag的消息
+            consumer.subscribe("test-zjj", "TagB");
+            consumer.start();
+        } catch (MQClientException e) {
+            e.printStackTrace();
         }
     }
 }

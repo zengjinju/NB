@@ -2,6 +2,7 @@ package com.zjj.nb.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.zjj.configmanager.manager.HostConfig;
 import com.zjj.nb.biz.manager.ehcache.ICacheProxy;
 import com.zjj.nb.biz.manager.ehcache.TestCacheBean;
 import com.zjj.nb.biz.manager.hystrix.UserCommand;
@@ -126,6 +127,22 @@ public class DemoTestController {
         });
     }
 
+    @RequestMapping("mq1")
+    public void testMq1() throws MQClientException {
+        mqConsumer.register(new MqCallBack() {
+            @Override
+            public String getTags() {
+                return "TagB";
+            }
+
+            @Override
+            public void doCallBack() {
+                userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+                System.out.println(JSON.toJSONString(userdao));
+            }
+        });
+    }
+
     @RequestMapping("ehcache")
     public void ehcache(){
         System.out.println(cacheProxy.getValue(TestCacheBean.CACHE_KET));
@@ -134,6 +151,18 @@ public class DemoTestController {
     @RequestMapping("hystrix")
     public void hystrixTest(){
         userDAO userdao=new UserCommand("zjj","123456").execute();
+    }
+
+    @RequestMapping("config")
+    @ResponseBody
+    public String getConfig(){
+        while(true){
+            String value=HostConfig.get("redis.port","");
+            if(value!=null&&!"".equals(value)){
+                return value;
+            }
+            System.out.println(System.currentTimeMillis());
+        }
     }
 
 }

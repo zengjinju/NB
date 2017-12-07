@@ -1,5 +1,6 @@
 package com.zjj.nb.biz.manager.redis;
 
+import com.zjj.configmanager.manager.HostConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +19,10 @@ import java.util.Random;
 @Slf4j
 public class RedisLock {
 
-    @Autowired
+    @Autowired(required = false)
     private RedisClient redisClient;
 
-    @Value("${redis.db.index}")
-    private int DEFAULT_DB_INDEX;
+    private int DEFAULT_DB_INDEX=Integer.parseInt(HostConfig.get("redis.db.index","1"));
 
     public static final long ONE_MILLI_NANOS = 1000000L;
     //默认超时时间（毫秒）

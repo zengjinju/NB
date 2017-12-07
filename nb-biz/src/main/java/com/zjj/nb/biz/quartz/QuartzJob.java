@@ -1,5 +1,6 @@
 package com.zjj.nb.biz.quartz;
 
+import com.zjj.configmanager.manager.HostConfig;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,7 @@ public class QuartzJob extends QuartzJobBean {
 
     @Autowired
     private TwoBean twoBean;
-    @Value("${quartz.run}")
-    private String quartzRun;
+    private String quartzRun= HostConfig.get("quartz.run","off");
 
 
     @Override

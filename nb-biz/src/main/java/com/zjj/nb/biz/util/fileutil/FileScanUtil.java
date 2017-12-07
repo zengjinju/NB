@@ -3,7 +3,7 @@ package com.zjj.nb.biz.util.fileutil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +56,37 @@ public class FileScanUtil {
                          *     方法在多线程环境下对相同字符串加的是同一个对象的锁。
                          * (这个synchronize锁相当于锁分段技术的实现，对有相同字符串的对象加锁，不同的字符串之间不存在竞争锁的情况)
                          */
-                        synchronized (fileName.intern()) {
-                            if (!map.containsKey(fileName)) {
-                                map.put(fileName, 1);
-                            } else {
-                                int count = map.get(fileName);
-                                count++;
-                                map.put(fileName, count);
+//                        synchronized (fileName.intern()) {
+//                            if (!map.containsKey(fileName)) {
+//                                map.put(fileName, 1);
+//                            } else {
+//                                int count = map.get(fileName);
+//                                count++;
+//                                map.put(fileName, count);
+//                            }
+//                        }
+                        synchronized (fileName.intern()){
+                            BufferedReader in=new BufferedReader(new InputStreamReader(new FileInputStream(subPath.toFile())));
+                            StringBuilder builder=new StringBuilder(500);
+                            String line=in.readLine();
+                            while(line!=null){
+                                int start=line.indexOf("*/");
+                                String subLine="";
+                                if(start!=-1) {
+                                    subLine = line.substring(start+2);
+                                }else{
+                                    subLine=line;
+                                }
+                                builder.append(subLine).append("\r\n");
+                                line = in.readLine();
+                            }
+                            in.close();
+                            BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(subPath.toFile())));
+                            String result=builder.toString();
+                            if(result!=null&&result.length()>0) {
+                                writer.write(builder.toString());
+                                writer.flush();
+                                writer.close();
                             }
                         }
                     }
@@ -117,7 +141,6 @@ public class FileScanUtil {
     }
 
     public static void main(String[] args) {
-        FileScanUtil scan = new FileScanUtil(Paths.get("/Users/admin/test"), ".java");
-        System.out.println(scan.count());
+        FileScanUtil scan = new FileScanUtil(Paths.get("/Users/admin/project/weimai/zhiliao/pay-web-cloud"), ".java");
     }
 }

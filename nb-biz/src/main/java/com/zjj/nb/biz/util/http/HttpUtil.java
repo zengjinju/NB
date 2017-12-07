@@ -1,7 +1,9 @@
 package com.zjj.nb.biz.util.http;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.annotation.JSONPOJOBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
@@ -198,12 +200,17 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) {
-        List<NameValuePair> list = new ArrayList<>();
-        list.add(new BasicNameValuePair("name", "zjj"));
-        list.add(new BasicNameValuePair("id", "1"));
-        Header header=new BasicHeader("","");
-        //post("http://localhost:8080/nb/demo/post", null, null);
-        String result=post("http://172.16.20.8:449",new HashMap<String, String>(),null);
-        System.out.println(result);
+//        List<NameValuePair> list = new ArrayList<>();
+//        list.add(new BasicNameValuePair("name", "zjj"));
+//        list.add(new BasicNameValuePair("id", "1"));
+//        Header header=new BasicHeader("","");
+//        //post("http://localhost:8080/nb/demo/post", null, null);
+//        String result=post("http://172.16.20.8:449",new HashMap<String, String>(),null);
+//        System.out.println(result);
+
+        String str=get("http://192.168.0.104:8088/test/sdk-service");
+//        JSONObject object=JSONObject.parseObject(str).get("data");
+        JSONArray array=JSONArray.parseArray(JSONObject.parseObject(str).get("data").toString());
+        System.out.println(str);
     }
 }

@@ -56,13 +56,13 @@
     </appender>
 
     <logger name="com.zjj.nb" additivity="false">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <appender-ref ref="COMMON" />
         <appender-ref ref="ERROR"/>
     </logger>
 
     <logger name="com.zjj.nb.dao.mapper" additivity="false">
-        <level value="DEBUG" />
+        <level value="INFO" />
         <appender-ref ref="DB" />
     </logger>
 

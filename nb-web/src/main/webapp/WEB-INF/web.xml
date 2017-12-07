@@ -11,7 +11,7 @@
   </context-param>
 
   <listener>
-    <listener-class>com.zjj.nb.listener.WebAppContextLoaderListener</listener-class>
+    <listener-class>com.zjj.configmanager.listener.ApplicationContextLoaderListener</listener-class>
   </listener>
 
   <filter>

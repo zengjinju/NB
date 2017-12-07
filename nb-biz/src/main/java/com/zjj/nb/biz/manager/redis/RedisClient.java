@@ -2,7 +2,9 @@ package com.zjj.nb.biz.manager.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.zjj.configmanager.manager.HostConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -63,8 +65,7 @@ public class RedisClient {
      */
     public static int CACHE_EXP_QUARTER_DAY = 6 * 60 * 60;
 
-    @Value("${redis.db.index}")
-    private int DEFAULT_DB_INDEX;
+    private int DEFAULT_DB_INDEX= Integer.parseInt(HostConfig.get("redis.db.index","1"));
 
     private static final List<Class<?>> SIMPLE_CLASS_OBJ = Lists.newArrayList();
 
@@ -74,7 +75,7 @@ public class RedisClient {
         SIMPLE_CLASS_OBJ.add(Boolean.class);
     }
 
-    @Resource
+    @Autowired(required = false)
     private JedisPool jedisPool;
 
     public Boolean set(String key, int seconds, Object value) {
