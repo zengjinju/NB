@@ -1,8 +1,12 @@
 package com.zjj.nb.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.zjj.configmanager.manager.HostConfig;
+import com.zjj.nb.biz.kdtree.KdNodeFeature;
+import com.zjj.nb.biz.kdtree.KdTree;
 import com.zjj.nb.biz.manager.ehcache.ICacheProxy;
 import com.zjj.nb.biz.manager.ehcache.TestCacheBean;
 import com.zjj.nb.biz.manager.hystrix.UserCommand;
@@ -21,15 +25,15 @@ import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jinju.zeng on 17/2/22.
@@ -38,131 +42,181 @@ import java.util.Map;
 @RequestMapping("demo")
 public class DemoTestController {
 
-    @Autowired
-    private RedisLock redisLock;
-    @Autowired
-    private userDAOMapper userdaoMapper;
-    @Autowired
-    private MQConsumer mqConsumer;
-    @Autowired
-    private userDAOMapper userDAOMapper;
-    @Autowired
-    private ICacheProxy cacheProxy;
+	@Autowired
+	private RedisLock redisLock;
+	@Autowired
+	private userDAOMapper userdaoMapper;
+	@Autowired
+	private MQConsumer mqConsumer;
+	@Autowired
+	private userDAOMapper userDAOMapper;
+	@Autowired
+	private ICacheProxy cacheProxy;
 
-    @RequestMapping("test")
-    public void test() {
-        //DemoTestController userService= (DemoTestController) ApplicationContextHelper.getInstance().getBean(this.getClass());
-        Map<String,UserService> map=ApplicationContextHelper.getInstance().getBeanOfType(UserService.class);
-        System.out.println(map);
-        System.out.println(ApplicationContextUtil.getBean("userServiceImpl"));
-    }
+	private Boolean flag = false;
+	private KdTree tree = null;
+	private JSONArray array = new JSONArray();
 
-    @RequestMapping("lock")
-    public void lockTest() {
-        Object obj = redisLock.lock("zjj", new LockCallBack() {
-            @Override
-            public Object runTask() {
-                return testTime();
-            }
-        });
-    }
+	@PostConstruct
+	public void init() {
+		Random random = new Random();
+		List<KdNodeFeature> list = new ArrayList<>();
 
-    public Integer testTime() {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return 1;
-    }
+		for (int i = 0; i < 3000; i++) {
+			KdNodeFeature feature = new KdNodeFeature();
+			double x = random.nextInt(100);
+			double y = random.nextInt(100);
+			double[] d = {x, y};
+			feature.setHash_vector(d);
+			list.add(feature);
+			JSONObject obj = new JSONObject();
+			obj.put("gender", "total");
+			obj.put("height", x);
+			obj.put("weight", y);
+			array.add(obj);
+		}
+		tree = KdTree.build(list);
+		flag = true;
+	}
 
-    @RequestMapping("insert")
-    public void insert() {
-        userDAO userdao = new userDAO();
-        userdao.setUserName("zjj");
-        userdao.setUserPassword("123456");
-        userdao.setGmtCreate(DateTime.now().toDate());
-        userdaoMapper.insertSelective(userdao);
-    }
+	@RequestMapping("test")
+	public void test() {
+		//DemoTestController userService= (DemoTestController) ApplicationContextHelper.getInstance().getBean(this.getClass());
+		Map<String, UserService> map = ApplicationContextHelper.getInstance().getBeanOfType(UserService.class);
+		System.out.println(map);
+		System.out.println(ApplicationContextUtil.getBean("userServiceImpl"));
+	}
 
-    @RequestMapping("get")
-    @ResponseBody
-    public Object get() {
-        userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-        System.out.println(userdao);
-        return userdao;
-    }
+	@RequestMapping("lock")
+	public void lockTest() {
+		Object obj = redisLock.lock("zjj", new LockCallBack() {
+			@Override
+			public Object runTask() {
+				return testTime();
+			}
+		});
+	}
 
-    @RequestMapping(value = "post", method = RequestMethod.POST)
-    @ResponseBody
-    public Object post() {
-        userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-        return userdao;
-    }
+	public Integer testTime() {
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return 1;
+	}
 
-    @RequestMapping("index")
-    public String index() {
-        return "index";
-    }
+	@RequestMapping("insert")
+	public void insert() {
+		userDAO userdao = new userDAO();
+		userdao.setUserName("zjj");
+		userdao.setUserPassword("123456");
+		userdao.setGmtCreate(DateTime.now().toDate());
+		userdaoMapper.insertSelective(userdao);
+	}
 
-    @RequestMapping("ip")
-    public void testIp(HttpServletRequest request) {
-        String ip = IPUtils.getRemoteAddress(request);
-        System.out.println(ip);
-    }
+	@RequestMapping("get")
+	@ResponseBody
+	public Object get() {
+		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+		System.out.println(userdao);
+		return userdao;
+	}
 
-    @RequestMapping("mq")
-    public void testMq() throws MQClientException {
-        mqConsumer.register(new MqCallBack() {
-            @Override
-            public String getTags() {
-                return "TagA";
-            }
+	@RequestMapping(value = "post", method = RequestMethod.POST)
+	@ResponseBody
+	public Object post() {
+		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+		return userdao;
+	}
 
-            @Override
-            public void doCallBack() {
-                userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-                System.out.println(JSON.toJSONString(userdao));
-            }
-        });
-    }
+	@RequestMapping("index")
+	public String index(@RequestParam(value = "x",required = false)Double x, @RequestParam(value = "y",required = false) Double y, Model model) {
+		model.addAttribute("x",x==null?0:x);
+		model.addAttribute("y",y==null?0:y);
+		return "index";
+	}
 
-    @RequestMapping("mq1")
-    public void testMq1() throws MQClientException {
-        mqConsumer.register(new MqCallBack() {
-            @Override
-            public String getTags() {
-                return "TagB";
-            }
+	@RequestMapping("data")
+	@ResponseBody
+	public JSONArray getData(@RequestParam("x")double x, @RequestParam("y") double y) {
+		JSONArray array1 = new JSONArray();
+		array1.addAll(array);
+		KdNodeFeature feature = new KdNodeFeature();
+		double[] d = {x, y};
+		JSONObject obj = new JSONObject();
+		obj.put("gender", "target");
+		obj.put("height", d[0]);
+		obj.put("weight", d[1]);
+		array1.add(obj);
+		feature.setHash_vector(d);
+		KdNodeFeature feature1 = tree.find(feature);
+		JSONObject obj1 = new JSONObject();
+		obj1.put("gender", "result");
+		obj1.put("height", feature1.getHash_vector()[0]);
+		obj1.put("weight", feature1.getHash_vector()[1]);
+		array1.add(obj1);
+		return array1;
+	}
 
-            @Override
-            public void doCallBack() {
-                userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-                System.out.println(JSON.toJSONString(userdao));
-            }
-        });
-    }
+	@RequestMapping("ip")
+	public void testIp(HttpServletRequest request) {
+		String ip = IPUtils.getRemoteAddress(request);
+		System.out.println(ip);
+	}
 
-    @RequestMapping("ehcache")
-    public void ehcache(){
-        System.out.println(cacheProxy.getValue(TestCacheBean.CACHE_KET));
-    }
+	@RequestMapping("mq")
+	public void testMq() throws MQClientException {
+		mqConsumer.register(new MqCallBack() {
+			@Override
+			public String getTags() {
+				return "TagA";
+			}
 
-    @RequestMapping("hystrix")
-    public void hystrixTest(){
-        userDAO userdao=new UserCommand("zjj","123456").execute();
-    }
+			@Override
+			public void doCallBack() {
+				userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+				System.out.println(JSON.toJSONString(userdao));
+			}
+		});
+	}
 
-    @RequestMapping("config")
-    @ResponseBody
-    public String getConfig(){
-        while(true){
-            String value=HostConfig.get("redis.port","");
-            if(value!=null&&!"".equals(value)){
-                return value;
-            }
-            System.out.println(System.currentTimeMillis());
-        }
-    }
+	@RequestMapping("mq1")
+	public void testMq1() throws MQClientException {
+		mqConsumer.register(new MqCallBack() {
+			@Override
+			public String getTags() {
+				return "TagB";
+			}
+
+			@Override
+			public void doCallBack() {
+				userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+				System.out.println(JSON.toJSONString(userdao));
+			}
+		});
+	}
+
+	@RequestMapping("ehcache")
+	public void ehcache() {
+		System.out.println(cacheProxy.getValue(TestCacheBean.CACHE_KET));
+	}
+
+	@RequestMapping("hystrix")
+	public void hystrixTest() {
+		userDAO userdao = new UserCommand("zjj", "123456").execute();
+	}
+
+	@RequestMapping("config")
+	@ResponseBody
+	public String getConfig() {
+		while (true) {
+			String value = HostConfig.get("redis.port", "");
+			if (value != null && !"".equals(value)) {
+				return value;
+			}
+			System.out.println(System.currentTimeMillis());
+		}
+	}
 
 }

@@ -8,4 +8,11 @@ package com.zjj.nb.biz.kdtree;
 public class KdNodeFeature {
 	private double[] hash_vector;
 
+	public double[] getHash_vector() {
+		return hash_vector;
+	}
+
+	public void setHash_vector(double[] hash_vector) {
+		this.hash_vector = hash_vector;
+	}
 }
