@@ -60,8 +60,8 @@ public class MathUtils {
 	}
 
 	public static void main(String[] args){
-		double[] d1={89,30};
-		double[] d2={80,50};
+		double[] d1={79,54};
+		double[] d2={84,49};
 		System.out.println(euclidDistance(d1,d2));
 	}
 }

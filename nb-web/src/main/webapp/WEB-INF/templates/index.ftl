@@ -10,12 +10,13 @@
 <div id="mountNode"></div>
 <input typ="hidden" value="${x}" id="x"/>
 <input type="hidden" value="${y}" id="y" />
+<input type="hidden" value="${dis}" id="dis">
 <script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/g2/3.0.0/g2.min.js"></script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/data-set/0.7.0/data-set.min.js"></script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
 <script>
-    $.getJSON('/demo/data', {'x':$("#x").val(),'y':$('#y').val()},function(data){
+    $.getJSON('/demo/data', {'x':$("#x").val(),'y':$('#y').val(),'dis':$('#dis').val()},function(data){
         const chart = new G2.Chart({
             container: 'mountNode',
             forceFit: true,

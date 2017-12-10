@@ -10,14 +10,27 @@ import java.util.*;
  */
 public class KdTree {
 	private KdNode kdNode;
+	private static PriorityQueue<PriorityNode> queue = new PriorityQueue<>(new Comparator<PriorityNode>() {
+		@Override
+		public int compare(PriorityNode o1, PriorityNode o2) {
+			if (o1.getDistance() > o2.getDistance()) {
+				return 1;
+			} else if (o1.getDistance() < o2.getDistance()) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	});
+
 
 	private KdTree() {
 	}
 
 	public static KdTree build(List<KdNodeFeature> datas) {
-		if (CollectionUtils.isEmpty(datas)) {
-			return null;
-		}
+//		if (CollectionUtils.isEmpty(datas)) {
+//			return null;
+//		}
 		KdTree tree = new KdTree();
 		tree.kdNode = new KdNode();
 		tree.build(tree.kdNode, datas, 0);
@@ -70,16 +83,24 @@ public class KdTree {
 		List<KdNodeFeature> right = datas.subList(median + 1, datas.size());
 		if (left.size() > 0) {
 			KdNode leftNode = new KdNode();
+			leftNode.setParent(node);
 			node.setKd_left(leftNode);
 			build(leftNode, left, dimentions);
 		}
 		if (right.size() > 0) {
 			KdNode rightNode = new KdNode();
+			rightNode.setParent(node);
 			node.setKd_right(rightNode);
 			build(rightNode, right, dimentions);
 		}
 	}
 
+	/**
+	 * 查找最近距离的节点
+	 *
+	 * @param feature
+	 * @return
+	 */
 	public KdNodeFeature find(KdNodeFeature feature) {
 		KdNode node = kdNode;
 		//回溯查找堆栈
@@ -106,40 +127,137 @@ public class KdTree {
 		}
 		//计算相对较近的叶子节点到查询节点的距离
 		double distance = MathUtils.euclidDistance(source, node.getKd_feature().getHash_vector());
-		return queryBackTracking(source, distance, node, stack);
+		return queryBackTracking(source, distance, stack);
 	}
 
-	private KdNodeFeature queryBackTracking(double[] source, double minDistance, KdNode nearest, Stack<KdNode> stack) {
-		KdNode node = null;
+	/**
+	 * 查找某个范围的点的集合
+	 *
+	 * @param feature
+	 * @param distance
+	 * @return
+	 */
+	public List<KdNodeFeature> aroundFind(KdNodeFeature feature, double distance) {
+		KdNode node = kdNode;
+		Stack<KdNode> stack = new Stack<>();
+		queue.clear();
+		stack.push(node);
+		while (node != null && node.getLeaf() == 0) {
+			if (feature.getHash_vector()[node.getKi()] <= node.getSplit()) {
+				if (node.getKd_left() != null) {
+					stack.push(node.getKd_left());
+					if (node.getKd_right() != null) {
+						double dis = MathUtils.euclidDistance(feature.getHash_vector(), node.getKd_right().getKd_feature().getHash_vector());
+						//另一侧的距离小于给定的距离可能存在子节点的距离也小于给定的距离
+						if (dis <= distance) {
+							stack.push(node.getKd_right());
+						} else if (Math.abs(feature.getHash_vector()[node.getKd_right().getKi()] - node.getKd_right().getSplit()) <= distance) {
+							if (node.getKd_right().getKd_left() != null) {
+								stack.push(node.getKd_right().getKd_left());
+							}
+							if (node.getKd_right().getKd_right() != null) {
+								stack.push(node.getKd_right().getKd_right());
+							}
+						}
+					}
+					node = node.getKd_left();
+				} else {
+					break;
+				}
+			} else {
+				if (node.getKd_right() != null) {
+					stack.push(node.getKd_right());
+					if (node.getKd_left() != null) {
+						double dis = MathUtils.euclidDistance(feature.getHash_vector(), node.getKd_left().getKd_feature().getHash_vector());
+						if (dis <= distance) {
+							stack.push(node.getKd_left());
+						} else if (Math.abs(feature.getHash_vector()[node.getKd_left().getKi()] - node.getKd_left().getSplit()) <= distance) {
+							if (node.getKd_left().getKd_left() != null) {
+								stack.push(node.getKd_left().getKd_left());
+							}
+							if (node.getKd_left().getKd_right() != null) {
+								stack.push(node.getKd_left().getKd_right());
+							}
+						}
+					}
+					node = node.getKd_right();
+				} else {
+					break;
+				}
+			}
+		}
+		return aroundQueryBackTracking(feature.getHash_vector(), distance, stack);
+	}
+
+	private List<KdNodeFeature> aroundQueryBackTracking(double[] source, double distance, Stack<KdNode> stack) {
+		KdNode node;
+		List<KdNodeFeature> list = new ArrayList<>();
+		List<KdNode> hasComparedNodes = new ArrayList<>();
 		double tdis;
 		while (stack.size() != 0) {
 			//弹出相对较近点的上一级节点
 			node = stack.pop();
+			hasComparedNodes.add(node);
+			tdis = MathUtils.euclidDistance(source, node.getKd_feature().getHash_vector());
+			if (tdis <= distance) {
+				if (!list.contains(node.getKd_feature())) {
+					list.add(node.getKd_feature());
+				}
+				if (node.getKd_left() != null && !hasComparedNodes.contains(node.getKd_left())) {
+					stack.push(node.getKd_left());
+				}
+				if (node.getKd_right() != null && !hasComparedNodes.contains(node.getKd_right())) {
+					stack.push(node.getKd_right());
+				}
+			}
+			//判读在维度k上|Q(k)-split|是否小于最小值,如果小于说明以最小值半径的球面和以维度k所在的平面有交集
+			if (node.getLeaf() == 0 && Math.abs(source[node.getKi()] - node.getSplit()) <= distance) {
+				if (node.getKd_right() != null && !stack.contains(node.getKd_right()) && !hasComparedNodes.contains(node.getKd_right())) {
+					stack.push(node.getKd_right());
+				}
+				if (node.getKd_left() != null && !stack.contains(node.getKd_left()) && !hasComparedNodes.contains(node.getKd_left())) {
+					stack.push(node.getKd_left());
+				}
+			}
+		}
+
+		return list;
+	}
+
+	private KdNodeFeature queryBackTracking(double[] source, double minDistance, Stack<KdNode> stack) {
+		KdNode node, nearest = null;
+		Set<KdNode> hasComparedNodes = new HashSet<>();
+		double tdis;
+		while (stack.size() != 0) {
+			//弹出相对较近点的上一级节点
+			node = stack.pop();
+			hasComparedNodes.add(node);
 			tdis = MathUtils.euclidDistance(source, node.getKd_feature().getHash_vector());
 			if (tdis <= minDistance) {
 				minDistance = tdis;
 				nearest = node;
-				if (node.getKd_left() != null) {
+				if (node.getKd_left() != null && !hasComparedNodes.contains(node.getKd_left())) {
 					stack.push(node.getKd_left());
 				}
-				if (node.getKd_right() != null) {
+				if (node.getKd_right() != null && !hasComparedNodes.contains(node.getKd_right())) {
 					stack.push(node.getKd_right());
 				}
 			}
 			//判读在维度k上|Q(k)-split|是否小于最小值,如果小于说明以最小值半径的球面和以维度k所在的平面有交集
 			if (node.getLeaf() == 0 && Math.abs(source[node.getKi()] - node.getSplit()) < minDistance) {
 				//如果source在维度k的值小于node的值，则到node的右子空间进行查询
-				if(source[node.getKi()]<=node.getSplit()) {
-					if (node.getKd_right() != null && !stack.contains(node.getKd_right())) {
+				if (source[node.getKi()] <= node.getSplit()) {
+					if (node.getKd_right() != null && !stack.contains(node.getKd_right()) && !hasComparedNodes.contains(node.getKd_right())) {
 						stack.push(node.getKd_right());
 					}
-				}else {
-					if (node.getKd_left()!=null && !stack.contains(node.getKd_left())) {
+				} else {
+					if (node.getKd_left() != null && !stack.contains(node.getKd_left()) && !hasComparedNodes.contains(node.getKd_left())) {
 						stack.push(node.getKd_left());
 					}
 				}
 			}
 		}
+		hasComparedNodes = null;
 		return nearest.getKd_feature();
 	}
 
@@ -169,38 +287,79 @@ public class KdTree {
 		return dimen;
 	}
 
-	public void insertNode(KdNodeFeature feature){
-		if(kdNode==null){
+	public void insertNode(KdNodeFeature feature) {
+		if (kdNode == null) {
 			return;
 		}
-		KdNode node=kdNode;
-		double[] source=feature.getHash_vector();
-		while (node!=null){{
-			if(source[node.getKi()]<=node.getSplit()){
-				if(node.getKd_left()!=null){
-					node=node.getKd_left();
-				}else{
-					//第一个节点
-					if(node.getKd_feature()==null) {
-						node.setSplit(source[node.getKi()]);
-						node.setKd_feature(feature);
-					}else{
-						KdNode newNode = new KdNode();
-						newNode.setKi(node.getKi());
-						newNode.setSplit(source[node.getKi()]);
-						newNode.setKd_feature(feature);
-						node.setKd_left(newNode);
+		KdNode node = kdNode;
+		double[] source = feature.getHash_vector();
+		while (node != null) {
+			{
+				if (source[node.getKi()] <= node.getSplit()) {
+					if (node.getKd_left() != null) {
+						node = node.getKd_left();
+					} else {
+						doInsertNewNode(node, feature, true);
+						break;
+					}
+				} else {
+					if (node.getKd_right() != null) {
+						node = node.getKd_right();
+					} else {
+						doInsertNewNode(node, feature, false);
+						break;
 					}
 				}
-			}else{
-
 			}
-		}}
+		}
+	}
+
+	private void doInsertNewNode(KdNode node, KdNodeFeature feature, Boolean isLeftNode) {
+		double[] source = feature.getHash_vector();
+		//第一个节点
+		if (node.getKd_feature() == null) {
+			node.setSplit(source[node.getKi()]);
+			node.setKd_feature(feature);
+		} else {
+			KdNode newNode = new KdNode();
+			newNode.setKi(1 - node.getKi());
+			newNode.setSplit(source[1 - node.getKi()]);
+			newNode.setKd_feature(feature);
+			if (isLeftNode) {
+				node.setKd_left(newNode);
+			} else {
+				node.setKd_right(newNode);
+			}
+		}
+	}
+
+	/**
+	 * 优先级节点封装
+	 */
+	private static class PriorityNode {
+		private KdNode kdNode;
+		private double distance;
+
+		public KdNode getKdNode() {
+			return kdNode;
+		}
+
+		public void setKdNode(KdNode kdNode) {
+			this.kdNode = kdNode;
+		}
+
+		public double getDistance() {
+			return distance;
+		}
+
+		public void setDistance(double distance) {
+			this.distance = distance;
+		}
 	}
 
 
 	public static void main(String[] args) {
-		Random random = new Random();
+//		Random random = new Random();
 		List<KdNodeFeature> list = new ArrayList<>();
 		KdNodeFeature f1 = new KdNodeFeature();
 		double[] d1 = {2, 3}, d2 = {5, 4}, d3 = {9, 6}, d4 = {4, 7}, d5 = {8, 1}, d6 = {7, 2};
@@ -221,13 +380,23 @@ public class KdTree {
 		list.add(f4);
 		list.add(f5);
 		list.add(f6);
-		KdTree tree = build(list);
-		double[] d={8,3};
-		KdNodeFeature feature1=new KdNodeFeature();
-		feature1.setHash_vector(d);
-		KdNodeFeature feature=tree.find(feature1);
-		System.out.println(feature);
+//		KdTree tree = build(list);
+//		double[] d={8,3};
+//		KdNodeFeature feature1=new KdNodeFeature();
+//		feature1.setHash_vector(d);
+//		KdNodeFeature feature=tree.find(feature1);
+//		System.out.println(feature);
 
+		KdTree tree = build(new ArrayList<KdNodeFeature>());
+		for (KdNodeFeature feature : list) {
+			tree.insertNode(feature);
+		}
+
+		double[] d = {8, 3};
+		KdNodeFeature feature1 = new KdNodeFeature();
+		feature1.setHash_vector(d);
+		List<KdNodeFeature> feature = tree.aroundFind(feature1, 4);
+		System.out.println(feature);
 
 	}
 }

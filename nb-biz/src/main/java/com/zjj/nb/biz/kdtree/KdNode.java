@@ -32,6 +32,8 @@ public class KdNode {
 	 */
 	private KdNode kd_right;
 
+	private KdNode parent;
+
 	/**
 	 * 当前分割的特征点
 	 */
@@ -96,5 +98,13 @@ public class KdNode {
 
 	public void setCompared(Boolean compared) {
 		isCompared = compared;
+	}
+
+	public KdNode getParent() {
+		return parent;
+	}
+
+	public void setParent(KdNode parent) {
+		this.parent = parent;
 	}
 }

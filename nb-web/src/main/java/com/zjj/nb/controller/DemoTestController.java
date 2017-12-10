@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jinju.zeng on 17/2/22.
@@ -75,7 +76,9 @@ public class DemoTestController {
 			obj.put("weight", y);
 			array.add(obj);
 		}
+		Long start=System.currentTimeMillis();
 		tree = KdTree.build(list);
+		System.out.println("构建树花费时间："+(System.currentTimeMillis()-start));
 		flag = true;
 	}
 
@@ -131,15 +134,16 @@ public class DemoTestController {
 	}
 
 	@RequestMapping("index")
-	public String index(@RequestParam(value = "x",required = false)Double x, @RequestParam(value = "y",required = false) Double y, Model model) {
+	public String index(@RequestParam(value = "x",required = false)Double x, @RequestParam(value = "y",required = false) Double y,@RequestParam(value = "dis",required = false)Double dis, Model model) {
 		model.addAttribute("x",x==null?0:x);
 		model.addAttribute("y",y==null?0:y);
+		model.addAttribute("dis",dis==null?0:dis);
 		return "index";
 	}
 
 	@RequestMapping("data")
 	@ResponseBody
-	public JSONArray getData(@RequestParam("x")double x, @RequestParam("y") double y) {
+	public JSONArray getData(@RequestParam("x")double x, @RequestParam("y") double y,@RequestParam("dis") double dis) {
 		JSONArray array1 = new JSONArray();
 		array1.addAll(array);
 		KdNodeFeature feature = new KdNodeFeature();
@@ -150,12 +154,23 @@ public class DemoTestController {
 		obj.put("weight", d[1]);
 		array1.add(obj);
 		feature.setHash_vector(d);
-		KdNodeFeature feature1 = tree.find(feature);
-		JSONObject obj1 = new JSONObject();
-		obj1.put("gender", "result");
-		obj1.put("height", feature1.getHash_vector()[0]);
-		obj1.put("weight", feature1.getHash_vector()[1]);
-		array1.add(obj1);
+		if(dis!=0) {
+			List<KdNodeFeature> featureList = tree.aroundFind(feature, dis);
+			for (KdNodeFeature feature1 : featureList) {
+				JSONObject obj1 = new JSONObject();
+				obj1.put("gender", "result");
+				obj1.put("height", feature1.getHash_vector()[0]);
+				obj1.put("weight", feature1.getHash_vector()[1]);
+				array1.add(obj1);
+			}
+		}else{
+			KdNodeFeature feature1=tree.find(feature);
+			JSONObject obj1 = new JSONObject();
+			obj1.put("gender", "result");
+			obj1.put("height", feature1.getHash_vector()[0]);
+			obj1.put("weight", feature1.getHash_vector()[1]);
+			array1.add(obj1);
+		}
 		return array1;
 	}
 
