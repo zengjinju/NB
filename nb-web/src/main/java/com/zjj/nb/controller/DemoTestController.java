@@ -5,14 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.zjj.configmanager.manager.HostConfig;
-import com.zjj.nb.biz.kdtree.KdNodeFeature;
-import com.zjj.nb.biz.kdtree.KdTree;
+import com.zjj.nb.biz.treeutil.kdtree.KdNodeFeature;
+import com.zjj.nb.biz.treeutil.kdtree.KdTree;
 import com.zjj.nb.biz.manager.ehcache.ICacheProxy;
 import com.zjj.nb.biz.manager.ehcache.TestCacheBean;
 import com.zjj.nb.biz.manager.hystrix.UserCommand;
 import com.zjj.nb.biz.manager.redis.LockCallBack;
 import com.zjj.nb.biz.manager.redis.RedisLock;
-import com.zjj.nb.biz.manager.threadPool.ThreadPool;
 import com.zjj.nb.biz.mq.MQConsumer;
 import com.zjj.nb.biz.mq.MqCallBack;
 import com.zjj.nb.biz.service.UserService;
@@ -22,7 +21,6 @@ import com.zjj.nb.biz.util.applicationcontext.ApplicationContextUtil;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jinju.zeng on 17/2/22.

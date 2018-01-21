@@ -1,14 +1,25 @@
 package com.zjj.nb.biz;
 
-import com.zjj.configmanager.manager.ConfigerLoader;
+import com.zjj.nb.biz.util.DateUtil;
+import org.apache.commons.lang.math.NumberUtils;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 /**
- * Created by admin on 2017/11/16.
+ * Created by admin on 2017/12/15.
  */
 public class Test {
 
 	public static void main(String[] args){
-		System.out.println(System.getProperty("user.dir"));
-//		System.out.println(loader.getUserLocalPath());
+		try {
+			java.awt.Desktop.getDesktop().browse(new URI("https://baidu.com/s?wd=java"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -120,7 +120,8 @@ public class RedisLock {
         long timeout = DEFAULT_TIME_OUT;
         while (timeout > 0) {
             long expires = System.currentTimeMillis() + EXPIRE * 1000 + 1;
-            String expiresStr = String.valueOf(expires); //锁到期时间
+            //锁到期时间
+            String expiresStr = String.valueOf(expires);
 
             if (jedis.setnx(lockKey, expiresStr) == 1) {
                 map.put(BOOLEAN_VALUE, true);
@@ -128,7 +129,8 @@ public class RedisLock {
                 //获得锁，
                 return map;
             }
-            String currentValueStr = jedis.get(lockKey);// redis 中存的时间
+            // redis 中存的时间
+            String currentValueStr = jedis.get(lockKey);
             /* a.在此时若有 服务器释放了锁，则current 为null。进行下次遍历的操作
             ** b. 锁还在，且时间比当前时间要小，却超时了。老的锁还在，且 超时
             *  c. currentValueStr == null

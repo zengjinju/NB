@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.kdtree;
+package com.zjj.nb.biz.treeutil.kdtree;
 
 /**
  * Created by admin on 2017/12/7.

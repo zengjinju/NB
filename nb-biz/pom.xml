@@ -80,5 +80,18 @@
             <groupId>com.zjj.configmanager</groupId>
             <artifactId>configmanager-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rtree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rtree</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 </project>

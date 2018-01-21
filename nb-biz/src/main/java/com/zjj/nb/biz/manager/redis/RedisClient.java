@@ -2,6 +2,7 @@ package com.zjj.nb.biz.manager.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.zjj.configmanager.manager.HostConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,35 @@ public class RedisClient {
             }
         });
         return object != null ? (List<T>) object : null;
+    }
+
+    /**
+     * 删除
+     * @param key
+     */
+    public void del(final String key){
+        runTask(new CallBack() {
+            @Override
+            public Object call(Jedis jedis) {
+                jedis.select(DEFAULT_DB_INDEX);
+                return jedis.del(key);
+            }
+        });
+    }
+
+    public Boolean setExpireNx(final String key, final int seconds, final String value){
+        Object obj=runTask(new CallBack() {
+            @Override
+            public Object call(Jedis jedis) {
+                jedis.select(DEFAULT_DB_INDEX);
+                if(jedis.setnx(key,value)==1L){
+                    jedis.expire(key,seconds);
+                    return Boolean.TRUE;
+                }
+                return Boolean.FALSE;
+            }
+        });
+        return (Boolean)obj;
     }
 
 

@@ -8,6 +8,7 @@ import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
 import com.zjj.nb.dao.entity.userDAO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -183,5 +184,6 @@ public class BeanUtil {
         //byte[] bytes=serialize(userDAO);
         String str="zjj";
         System.out.println(str.hashCode());
+//        BeanUtils.copyProperties();
     }
 }

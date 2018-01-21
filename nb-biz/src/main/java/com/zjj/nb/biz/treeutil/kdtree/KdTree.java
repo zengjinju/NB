@@ -1,7 +1,6 @@
-package com.zjj.nb.biz.kdtree;
+package com.zjj.nb.biz.treeutil.kdtree;
 
 import com.zjj.nb.biz.util.MathUtils;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 
@@ -10,19 +9,6 @@ import java.util.*;
  */
 public class KdTree {
 	private KdNode kdNode;
-	private static PriorityQueue<PriorityNode> queue = new PriorityQueue<>(new Comparator<PriorityNode>() {
-		@Override
-		public int compare(PriorityNode o1, PriorityNode o2) {
-			if (o1.getDistance() > o2.getDistance()) {
-				return 1;
-			} else if (o1.getDistance() < o2.getDistance()) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
-	});
-
 
 	private KdTree() {
 	}
@@ -140,7 +126,6 @@ public class KdTree {
 	public List<KdNodeFeature> aroundFind(KdNodeFeature feature, double distance) {
 		KdNode node = kdNode;
 		Stack<KdNode> stack = new Stack<>();
-		queue.clear();
 		stack.push(node);
 		while (node != null && node.getLeaf() == 0) {
 			if (feature.getHash_vector()[node.getKi()] <= node.getSplit()) {
