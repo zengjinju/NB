@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService,ApplicationContextAware,Bean
 
     @PostConstruct
     private void beforeInit(){
-        UserService userService=(UserService) beanFactory.getBean(this.getClass());
-        userService.toString();
+//        UserService userService=(UserService) beanFactory.getBean(this.getClass());
+//        userService.toString();
 
     }
 

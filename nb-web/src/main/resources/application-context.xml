@@ -24,5 +24,6 @@
     <!--<import resource="classpath:spring-mq.xml" />-->
     <import resource="classpath*:spring-ehcache.xml" />
     <import resource="classpath*:dubbo-application.xml" />
+    <import resource="spring-aop.xml" />
 
 </beans>

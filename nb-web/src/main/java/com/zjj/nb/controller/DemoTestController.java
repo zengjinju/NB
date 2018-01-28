@@ -50,6 +50,8 @@ public class DemoTestController {
 	private userDAOMapper userDAOMapper;
 	@Autowired
 	private ICacheProxy cacheProxy;
+	@Autowired
+	private UserService userService;
 
 	private Boolean flag = false;
 	private KdTree tree = null;
@@ -118,9 +120,10 @@ public class DemoTestController {
 	@RequestMapping("get")
 	@ResponseBody
 	public Object get() {
-		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-		System.out.println(userdao);
-		return userdao;
+//		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+//		System.out.println(userdao);
+		userService.get("abc");
+		return Boolean.TRUE;
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)

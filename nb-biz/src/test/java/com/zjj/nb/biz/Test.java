@@ -1,5 +1,6 @@
 package com.zjj.nb.biz;
 
+import com.alibaba.fastjson.JSON;
 import com.zjj.nb.biz.util.DateUtil;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -14,12 +15,6 @@ import java.util.*;
 public class Test {
 
 	public static void main(String[] args){
-		try {
-			java.awt.Desktop.getDesktop().browse(new URI("https://baidu.com/s?wd=java"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		System.out.println(259&(256-1));
 	}
 }

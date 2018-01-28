@@ -8,6 +8,7 @@ import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
 import com.zjj.nb.dao.entity.userDAO;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.beans.BeanInfo;
