@@ -179,12 +179,12 @@ public class BeanUtil {
     }
 
     public static void main(String[] args){
-        userDAO userDAO=new userDAO();
-        userDAO.setUserName("zjj");
-        userDAO.setUserPassword("123");
-        //byte[] bytes=serialize(userDAO);
-        String str="zjj";
-        System.out.println(str.hashCode());
+//        userDAO userDAO=new userDAO();
+//        userDAO.setUserName("zjj");
+//        userDAO.setUserPassword("123");
+//        //byte[] bytes=serialize(userDAO);
+//        String str="zjj";
+//        System.out.println(str.hashCode());
 //        BeanUtils.copyProperties();
     }
 }

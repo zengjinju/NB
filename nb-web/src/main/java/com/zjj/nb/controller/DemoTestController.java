@@ -120,9 +120,8 @@ public class DemoTestController {
 	@RequestMapping("get")
 	@ResponseBody
 	public Object get() {
-//		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
-//		System.out.println(userdao);
-		userService.get("abc");
+		userDAO userdao = userdaoMapper.selectByNameAndPwd("abc", "123456");
+		System.out.println(userdao);
 		return Boolean.TRUE;
 	}
 

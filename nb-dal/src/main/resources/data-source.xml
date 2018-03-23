@@ -11,38 +11,54 @@
 
 
     <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
-    <bean id="mySqlDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <!--<bean id="mySqlDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+        <!--<property name="driverClassName" value="${jdbc.driver}"/>-->
+        <!--<property name="url" value="${jdbc.url}"/>-->
+        <!--<property name="username" value="${jdbc.username}"/>-->
+        <!--<property name="password" value="${jdbc.password}"/>-->
+
+        <!--&lt;!&ndash;maxWait: 超时等待时间以毫秒为单位 此处设置30秒&ndash;&gt;-->
+        <!--<property name="maxWait" value="30000"/>-->
+        <!--&lt;!&ndash;maxActive: 最大连接数量&ndash;&gt;-->
+        <!--<property name="maxActive" value="50"/>-->
+        <!--&lt;!&ndash;minIdle: 最小空闲连接&ndash;&gt;-->
+        <!--<property name="minIdle" value="0"/>-->
+        <!--&lt;!&ndash;maxIdle: 最大空闲连接&ndash;&gt;-->
+        <!--<property name="maxIdle" value="50"/>-->
+        <!--&lt;!&ndash;initialSize: 初始化连接数量&ndash;&gt;-->
+        <!--<property name="initialSize" value="50"/>-->
+        <!--&lt;!&ndash; 移除废弃连接时打印废弃连接的回收日志 &ndash;&gt;-->
+        <!--<property name="logAbandoned" value="true"/>-->
+        <!--&lt;!&ndash;removeAbandoned: 是否自动回收废弃连接&ndash;&gt;-->
+        <!--<property name="removeAbandoned"  value="true"/>-->
+        <!--&lt;!&ndash;removeAbandonedTimeout: 自动回收废弃连接的超时时间(以秒数为单位) 这里设置10分钟。removeAbandonedTimeout(链接泄漏)&ndash;&gt;-->
+        <!--<property name="removeAbandonedTimeout" value="600"/>-->
+        <!--&lt;!&ndash; 空闲连接回收器线程休眠的时间值,以毫秒为单位. 这里设置10分钟&ndash;&gt;-->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="600000"/>-->
+        <!--&lt;!&ndash; 在每次空闲连接回收器线程运行时检查的连接数量，建议设置和maxActive一样大，这样每次可以有效检查所有的连接.&ndash;&gt;-->
+        <!--<property name="numTestsPerEvictionRun" value="50"/>-->
+        <!--&lt;!&ndash;连接在池中空闲连接超时时间 毫秒为单位 默认值：半小时(1000 * 60 * 3) 这里设置20分钟。minEvictableIdleTimeMillis(针对空闲链接)&ndash;&gt;-->
+        <!--<property name="minEvictableIdleTimeMillis" value="1200000"/>-->
+        <!--&lt;!&ndash; 检查连接的sql &ndash;&gt;-->
+        <!--<property name="validationQuery" value="SELECT 1"/>-->
+        <!--&lt;!&ndash; 检查连接sql超时时间 秒为单位&ndash;&gt;-->
+        <!--<property name="validationQueryTimeout" value="5"/>-->
+    <!--</bean>-->
+
+    <!--Hikaricp dataSource-->
+    <bean id="mySqlDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">
         <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
 
-        <!--maxWait: 超时等待时间以毫秒为单位 此处设置30秒-->
-        <property name="maxWait" value="30000"/>
-        <!--maxActive: 最大连接数量-->
-        <property name="maxActive" value="50"/>
-        <!--minIdle: 最小空闲连接-->
-        <property name="minIdle" value="0"/>
-        <!--maxIdle: 最大空闲连接-->
-        <property name="maxIdle" value="50"/>
-        <!--initialSize: 初始化连接数量-->
-        <property name="initialSize" value="50"/>
-        <!-- 移除废弃连接时打印废弃连接的回收日志 -->
-        <property name="logAbandoned" value="true"/>
-        <!--removeAbandoned: 是否自动回收废弃连接-->
-        <property name="removeAbandoned"  value="true"/>
-        <!--removeAbandonedTimeout: 自动回收废弃连接的超时时间(以秒数为单位) 这里设置10分钟。removeAbandonedTimeout(链接泄漏)-->
-        <property name="removeAbandonedTimeout" value="600"/>
-        <!-- 空闲连接回收器线程休眠的时间值,以毫秒为单位. 这里设置10分钟-->
-        <property name="timeBetweenEvictionRunsMillis" value="600000"/>
-        <!-- 在每次空闲连接回收器线程运行时检查的连接数量，建议设置和maxActive一样大，这样每次可以有效检查所有的连接.-->
-        <property name="numTestsPerEvictionRun" value="50"/>
-        <!--连接在池中空闲连接超时时间 毫秒为单位 默认值：半小时(1000 * 60 * 3) 这里设置20分钟。minEvictableIdleTimeMillis(针对空闲链接)-->
-        <property name="minEvictableIdleTimeMillis" value="1200000"/>
-        <!-- 检查连接的sql -->
-        <property name="validationQuery" value="SELECT 1"/>
-        <!-- 检查连接sql超时时间 秒为单位-->
-        <property name="validationQueryTimeout" value="5"/>
+        <property name="readOnly" value="false" />
+        <property name="connectionTimeout" value="30000"/>
+        <!--一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟-->
+        <property name="idleTimeout" value="600000" />
+        <property name="maxLifetime" value="1800000" />
+        <property name="maximumPoolSize" value="60" />
+        <property name="minimumIdle" value="10" />
     </bean>
 
     <bean id="mySqlSessionFactory"

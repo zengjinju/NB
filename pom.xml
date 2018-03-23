@@ -302,6 +302,13 @@
         <artifactId>disruptor</artifactId>
         <version>3.3.6</version>
       </dependency>
+
+      <!--HiKaricp数据库连接池-->
+      <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>2.6.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
