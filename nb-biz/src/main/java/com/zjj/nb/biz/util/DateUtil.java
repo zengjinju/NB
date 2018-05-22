@@ -3,6 +3,7 @@ package com.zjj.nb.biz.util;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Hours;
+import org.joda.time.Years;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 import java.text.ParseException;
@@ -95,13 +96,5 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        Date t1 = null, t2 = null;
-        try {
-            t1 = new SimpleDateFormat(PATTERT_FORMAT).parse("2017-05-17 12:00:00");
-            t2 = new SimpleDateFormat(PATTERT_FORMAT).parse("2017-06-24 12:00:00");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        int n = betweenDays(t2, t1);
     }
 }

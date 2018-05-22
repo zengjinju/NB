@@ -8,6 +8,7 @@ import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
 import com.zjj.nb.dao.entity.userDAO;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
@@ -179,12 +180,10 @@ public class BeanUtil {
     }
 
     public static void main(String[] args){
-//        userDAO userDAO=new userDAO();
-//        userDAO.setUserName("zjj");
-//        userDAO.setUserPassword("123");
-//        //byte[] bytes=serialize(userDAO);
-//        String str="zjj";
-//        System.out.println(str.hashCode());
-//        BeanUtils.copyProperties();
+        Long time=1526018341000L;
+        Date date=new Date(time);
+        System.out.println(DateUtil.parseDateToString(date,"yyyy-MM-dd HH:mm:dd"));
+        System.out.println(System.currentTimeMillis()/1000);
+
     }
 }

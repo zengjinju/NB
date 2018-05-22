@@ -110,11 +110,11 @@ public class DemoTestController {
 
 	@RequestMapping("insert")
 	public void insert() {
-		userDAO userdao = new userDAO();
-		userdao.setUserName("zjj");
-		userdao.setUserPassword("123456");
-		userdao.setGmtCreate(DateTime.now().toDate());
-		userdaoMapper.insertSelective(userdao);
+		userDAO dao=new userDAO();
+		dao.setId(7);
+		dao.setUserName("test");
+		dao.setUserPassword("123");
+		userService.insert(dao);
 	}
 
 	@RequestMapping("get")

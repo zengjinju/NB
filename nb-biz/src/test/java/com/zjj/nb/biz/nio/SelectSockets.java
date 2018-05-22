@@ -51,6 +51,10 @@ public class SelectSockets {
                     if (key.isReadable()) {
                         readDataFromSocket(key);
                     }
+                    //通道是否准备好写操作
+                    if(key.isWritable()){
+
+                    }
 
                 }
                 it.remove();

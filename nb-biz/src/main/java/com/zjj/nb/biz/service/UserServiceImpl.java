@@ -1,5 +1,7 @@
 package com.zjj.nb.biz.service;
 
+import com.zjj.nb.biz.service.transaction.IAfterCommitExecutor;
+import com.zjj.nb.biz.service.transaction.IAfterTransactionHandler;
 import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.springframework.beans.BeanWrapper;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService,ApplicationContextAware,Bean
 
     @Autowired
     private userDAOMapper userdaoMapper;
+    @Autowired
+    private IAfterCommitExecutor afterCommitExecutor;
 
     private ApplicationContext applicationContext;
     private BeanFactory beanFactory;
@@ -47,8 +51,14 @@ public class UserServiceImpl implements UserService,ApplicationContextAware,Bean
     @Transactional
     @Override
     public int insert(userDAO userDAO) {
-        userDAO.setUserName("abc");
-        return userdaoMapper.insertSelective(userDAO);
+        userdaoMapper.insertSelective(userDAO);
+        afterCommitExecutor.execute(new IAfterTransactionHandler() {
+            @Override
+            public void run() {
+                System.out.println("hello word");
+            }
+        });
+        return 1;
     }
 
     @Override
