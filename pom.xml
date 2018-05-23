@@ -314,6 +314,18 @@
         <artifactId>netty-all</artifactId>
         <version>4.1.12.Final</version>
       </dependency>
+
+      <!--阿里云MQTT协议-->
+      <dependency>
+        <groupId>org.eclipse.paho</groupId>
+        <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.10</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -385,7 +397,6 @@
       <artifactId>rtree</artifactId>
       <version>0.8.1beta</version>
     </dependency>
-
   </dependencies>
 
 

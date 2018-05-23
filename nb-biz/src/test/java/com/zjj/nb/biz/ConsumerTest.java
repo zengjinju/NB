@@ -39,20 +39,29 @@ public class ConsumerTest {
 		connectOptions.setMqtt(mqttOpntions);
 		NettyBootstrapClient client=new NettyBootstrapClient(connectOptions);
 		Channel channel= client.start();
-		for(int i=0;i<10;i++) {
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			publishMess(channel);
-		}
+		connection(channel);
+//		for(int i=0;i<10;i++) {
+//			try {
+//				TimeUnit.SECONDS.sleep(2);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			publishMess(channel);
+//		}
 
+	}
+
+	public static void connection(Channel channel){
+		MqttFixedHeader header=new MqttFixedHeader(MqttMessageType.CONNECT,false,MqttQoS.valueOf(1),false,0);
+		MqttConnectVariableHeader variableHeader=new MqttConnectVariableHeader("zjj",1,false,false,false,1,false,false,0);
+		MqttConnectPayload payload=new MqttConnectPayload("zjj","zjj","zjj","","");
+		MqttConnectMessage connectMessage=new MqttConnectMessage(header,variableHeader,payload);
+		channel.writeAndFlush(connectMessage);
 	}
 
 	public static void publishMess(Channel channel){
 		String val="hello world";
-		MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, MqttQoS.valueOf(2),false,0);
+		MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, MqttQoS.valueOf(1),false,0);
 		MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader("zjj",11);
 		MqttPublishMessage mqttPublishMessage = null;
 		try {
