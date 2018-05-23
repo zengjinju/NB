@@ -2,9 +2,11 @@ package com.zjj.nb.biz.mqtt.client;
 
 import com.zjj.nb.biz.mqtt.MqttHandler;
 import com.zjj.nb.biz.mqtt.MqttService;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.mqtt.MqttFixedHeader;
-import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.*;
+
+import java.util.List;
 
 public class DefaultMqHandler extends MqttHandler {
 
@@ -30,6 +32,19 @@ public class DefaultMqHandler extends MqttHandler {
 				break;
 			case PUBACK :
 				System.out.println("服务的响应");
+				break;
+			case SUBACK:
+				MqttSubAckMessage subAckMessage=(MqttSubAckMessage)mqttMessage;
+				List<Integer> list=subAckMessage.payload().grantedQoSLevels();
+				System.out.println(list.get(0));
+				break;
+			case PUBLISH:
+				MqttPublishMessage publishMessage=(MqttPublishMessage)mqttMessage;
+				ByteBuf byteBuf=publishMessage.payload();
+				byte[] bytes=new byte[byteBuf.readableBytes()];
+				byteBuf.readBytes(bytes);
+				String message=new String(bytes);
+				System.out.println(message);
 				break;
 		}
 	}

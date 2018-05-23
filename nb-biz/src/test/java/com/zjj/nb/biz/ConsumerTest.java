@@ -8,6 +8,8 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,15 +41,10 @@ public class ConsumerTest {
 		connectOptions.setMqtt(mqttOpntions);
 		NettyBootstrapClient client=new NettyBootstrapClient(connectOptions);
 		Channel channel= client.start();
-		connection(channel);
-//		for(int i=0;i<10;i++) {
-//			try {
-//				TimeUnit.SECONDS.sleep(2);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			publishMess(channel);
-//		}
+		//第一步发布消息
+		publishMess(channel);
+		//第二步订阅消息
+		submessage(channel);
 
 	}
 
@@ -60,7 +57,7 @@ public class ConsumerTest {
 	}
 
 	public static void publishMess(Channel channel){
-		String val="hello world";
+		String val="hello world,zjj";
 		MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, MqttQoS.valueOf(1),false,0);
 		MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader("zjj",11);
 		MqttPublishMessage mqttPublishMessage = null;
@@ -76,5 +73,16 @@ public class ConsumerTest {
 		MqttFixedHeader header=new MqttFixedHeader(MqttMessageType.PINGREQ,false, MqttQoS.valueOf(2),false,0);
 		MqttMessage message=new MqttMessage(header);
 		channel.writeAndFlush(message);
+	}
+
+	public static void submessage(Channel channel){
+		List<MqttTopicSubscription> mqttTopicSubscriptions=new ArrayList<>();
+		MqttTopicSubscription topicSubscription=new MqttTopicSubscription("zjj",MqttQoS.AT_LEAST_ONCE);
+		mqttTopicSubscriptions.add(topicSubscription);
+		MqttSubscribePayload mqttSubscribePayload = new MqttSubscribePayload(mqttTopicSubscriptions);
+		MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.SUBSCRIBE,false, MqttQoS.AT_LEAST_ONCE,false,0);
+		MqttMessageIdVariableHeader mqttMessageIdVariableHeader =MqttMessageIdVariableHeader.from(1);
+		MqttSubscribeMessage mqttSubscribeMessage = new MqttSubscribeMessage(mqttFixedHeader,mqttMessageIdVariableHeader,mqttSubscribePayload);
+		channel.writeAndFlush(mqttSubscribeMessage);
 	}
 }
