@@ -16,7 +16,7 @@
 <script src="https://gw.alipayobjects.com/os/antv/assets/data-set/0.7.0/data-set.min.js"></script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
 <script>
-    $.getJSON('/demo/data', {'x':$("#x").val(),'y':$('#y').val(),'dis':$('#dis').val()},function(data){
+    $.getJSON('/aliyun/data', {'x':$("#x").val(),'y':$('#y').val(),'dis':$('#dis').val()},function(data){
         const chart = new G2.Chart({
             container: 'mountNode',
             forceFit: true,

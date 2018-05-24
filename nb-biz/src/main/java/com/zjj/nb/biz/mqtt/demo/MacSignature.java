@@ -1,4 +1,4 @@
-package com.zjj.nb.biz.mqtt.aliyun;
+package com.zjj.nb.biz.mqtt.demo;
 
 import org.eclipse.paho.client.mqttv3.internal.websocket.Base64;
 
