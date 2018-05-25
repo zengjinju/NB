@@ -11,7 +11,7 @@ public class MqttConsumer {
 
 	private ConnectOptions options;
 
-	public void connect(ConnectOptions options) {
+	public void connect(ConnectOptions options,MqttMessageArrivedCallback callback) {
 		options.checkConnectOptions();
 		this.options = options;
 		MqttConnectOptions connectOptions = options.convert2MqttOptions();
@@ -44,13 +44,7 @@ public class MqttConsumer {
 					System.out.println("订阅消息：topic:"+s+",message:"+new String(mqttMessage.getPayload()));
 					List<String> list = Arrays.asList(options.getSubscribeTopics());
 					if (list != null && list.contains(s)) {
-						MqttClient publishClient=new MqttClient(options.getServerURIs()[0],options.getClientId(),persistence);
-						publishClient.connect(connectOptions);
-						MqttMessage message=new MqttMessage("ack".getBytes());
-						message.setQos(0);
-						//向Producer反馈消息
-						publishClient.publish(options.getPublishTopic(),message);
-						publishClient.close();
+						callback.callBack(mqttMessage.getPayload());
 					}
 				}
 
@@ -92,6 +86,21 @@ public class MqttConsumer {
 			client.subscribe(options.getSubscribeTopics(),options.getQos());
 		} catch (MqttException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void subBack(byte[] bytes){
+		try {
+			MemoryPersistence persistence = new MemoryPersistence();
+			MqttClient publishClient = new MqttClient(options.getServerURIs()[0], options.getClientId(), persistence);
+			publishClient.connect(options.convert2MqttOptions());
+			MqttMessage message = new MqttMessage(bytes);
+			message.setQos(0);
+			//向Producer反馈消息
+			publishClient.publish(options.getPublishTopic(), message);
+			publishClient.close();
+		}catch (Exception e){
+
 		}
 	}
 

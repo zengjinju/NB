@@ -2,6 +2,7 @@ package com.zjj.nb.biz.mqtt.aliyun;
 
 import com.zjj.nb.biz.mqtt.demo.ConnectOptions;
 import com.zjj.nb.biz.mqtt.demo.MacSignature;
+import com.zjj.nb.biz.mqtt.demo.MqttMessageArrivedCallback;
 import com.zjj.nb.biz.mqtt.demo.MqttConsumer;
 
 /**
@@ -29,8 +30,8 @@ public class Consumer {
 
 
 	public static void main(String[] args) {
-		MqttConsumer consumer=new MqttConsumer();
-		ConnectOptions options=new ConnectOptions();
+		MqttConsumer consumer = new MqttConsumer();
+		ConnectOptions options = new ConnectOptions();
 		options.setAccessKey(accessKey);
 		options.setSecretKey(secretKey);
 		options.setClientId(clientId);
@@ -48,14 +49,13 @@ public class Consumer {
 		options.setPublishTopic(PUBLISH_TOPIC);
 		options.setSubscribeTopics(new String[]{SUBSCRIBE_TOPIC});
 		options.setQos(new int[]{0});
-		consumer.connect(options);
+		consumer.connect(options, new MqttMessageArrivedCallback() {
+			@Override
+			public void callBack(byte[] payload) {
+				consumer.subBack(payload);
+			}
+		});
 		consumer.subMessage();
-//		while(true){
-//			if(options.getSubResult()){
-//				consumer.pubMessage("ack".getBytes(),0);
-//				break;
-//			}
-//		}
 	}
 
 }
