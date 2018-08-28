@@ -1,7 +1,9 @@
-package com.zjj.nb.biz.mqtt.aliyun;
+package com.zjj.nb.biz.mqtt.demo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zjj.nb.biz.mqtt.demo.ConnectOptions;
 import com.zjj.nb.biz.mqtt.demo.MacSignature;
+import com.zjj.nb.biz.mqtt.demo.MqttMessageType;
 import com.zjj.nb.biz.mqtt.demo.MqttProducer;
 
 import java.util.concurrent.ExecutorService;
@@ -58,14 +60,30 @@ public class Producer {
 		options.setPublishTopic(PUBLISH_TOPIC);
 		options.setSubscribeTopics(new String[]{SUBSCRIBE_TOPIC});
 		options.setQos(new int[]{0});
-		producer.start(options);
-		producer.pubMessage("开始跑步".getBytes(),0);
+		producer.start(options, new MqttMessageArrivedCallback() {
+			@Override
+			public void callBack(byte[] payload) {
+				try {
+					JSONObject object = JSONObject.parseObject(new String(payload));
+					switch (MqttMessageType.getByValue(object.getString("cmd"))) {
+						case VERIFICATION_ACK:
+							break;
+						case START_RUNNING_ACK:
+							break;
+						case STOP_RUNNING_ACK:
+					}
+				}catch (Exception e){
+
+				}
+			}
+		});
+		producer.pubMessage(MqttMessageType.START_RUNNING.getValue(),"21094de3423q3",0);
 		producer.subMessage();
 		try {
 			TimeUnit.SECONDS.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		producer.pubMessage("停止跑步".getBytes(),0);
+		producer.pubMessage(MqttMessageType.STOP_RUNNING.getValue(),"21094de3423q3",0);
 	}
 }

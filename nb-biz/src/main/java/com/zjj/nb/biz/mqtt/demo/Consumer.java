@@ -1,9 +1,7 @@
-package com.zjj.nb.biz.mqtt.aliyun;
+package com.zjj.nb.biz.mqtt.demo;
 
-import com.zjj.nb.biz.mqtt.demo.ConnectOptions;
-import com.zjj.nb.biz.mqtt.demo.MacSignature;
-import com.zjj.nb.biz.mqtt.demo.MqttMessageArrivedCallback;
-import com.zjj.nb.biz.mqtt.demo.MqttConsumer;
+import com.alibaba.fastjson.JSONObject;
+import com.zjj.nb.biz.mqtt.demo.*;
 
 /**
  * 手机端
@@ -52,7 +50,18 @@ public class Consumer {
 		consumer.connect(options, new MqttMessageArrivedCallback() {
 			@Override
 			public void callBack(byte[] payload) {
-				consumer.subBack(payload);
+				JSONObject object=JSONObject.parseObject(new String(payload));
+				switch (MqttMessageType.getByValue(object.getString("cmd"))){
+					case VERIFICATION:
+						break;
+					case START_RUNNING:
+						consumer.subBack(MqttMessageType.START_RUNNING_ACK.getValue(),"15757116404");
+						break;
+					case STOP_RUNNING:
+						consumer.subBack(MqttMessageType.STOP_RUNNING_ACK.getValue(),"15757116404");
+						consumer.unSubscribe();
+						break;
+				}
 			}
 		});
 		consumer.subMessage();

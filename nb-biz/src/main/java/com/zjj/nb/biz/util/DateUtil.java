@@ -76,6 +76,21 @@ public class DateUtil {
         return dateFormat;
     }
 
+    public static Date parseStr2Date(String date,String format){
+        if (format == null || "".equals(format)) {
+            //使用默认的日期格式
+            format = PATTERT_FORMAT;
+        }
+        SimpleDateFormat dateFormat = getSimpleDateFormat();
+        dateFormat.applyPattern(format);
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 计算两个日期之间相差的天数
      *

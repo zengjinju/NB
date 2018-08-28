@@ -56,7 +56,6 @@ public class MD5Util {
     }
 
     public static void main(String[] args){
-        String md5Str=md5("zjj");
-        System.out.println(md5Str);
+        System.out.println(Long.toHexString(123L));
     }
 }

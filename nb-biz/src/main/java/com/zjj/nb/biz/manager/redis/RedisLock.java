@@ -162,5 +162,9 @@ public class RedisLock {
         return null;
     }
 
+    public Boolean lock(String key,String value,int secons){
+        return redisClient.setExpireNx(key,secons,value);
+    }
+
 
 }

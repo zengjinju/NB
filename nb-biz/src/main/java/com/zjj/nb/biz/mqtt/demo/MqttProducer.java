@@ -1,5 +1,6 @@
 package com.zjj.nb.biz.mqtt.demo;
 
+import com.alibaba.fastjson.JSONObject;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
@@ -15,7 +16,7 @@ public class MqttProducer {
 	private ConnectOptions options;
 
 
-	public void start(ConnectOptions options) {
+	public void start(ConnectOptions options,MqttMessageArrivedCallback callback) {
 		options.checkConnectOptions();
 		this.options = options;
 		MqttConnectOptions connectOptions = options.convert2MqttOptions();
@@ -52,6 +53,7 @@ public class MqttProducer {
 					//接收到来自订阅消息的响应
 					if (topicList.size() != 0 && topicList.contains(s)) {
 						//TODO，这里可以是跑步机启动跑步或者是跑步机结束跑步
+						callback.callBack(mqttMessage.getPayload());
 					}
 				}
 
@@ -76,10 +78,8 @@ public class MqttProducer {
 		}
 	}
 
-	public void pubMessage(byte[] message, int qos) {
+	public void pubMessage(String messageType,String payload, int qos) {
 		System.out.println("发送消息成功");
-		MqttMessage mqttMessage = new MqttMessage(message);
-		mqttMessage.setQos(qos);
 		if (client == null) {
 			throw new RuntimeException();
 		}
@@ -87,6 +87,11 @@ public class MqttProducer {
 			throw new RuntimeException("请选择要发布的topic");
 		}
 		try {
+			JSONObject object=new JSONObject();
+			object.put("cmd",messageType);
+			object.put("value",payload);
+			MqttMessage mqttMessage = new MqttMessage(object.toJSONString().getBytes());
+			mqttMessage.setQos(qos);
 			client.publish(options.getPublishTopic(),mqttMessage);
 		} catch (MqttException e) {
 			e.printStackTrace();
@@ -104,6 +109,20 @@ public class MqttProducer {
 			client.subscribe(options.getSubscribeTopics(),options.getQos());
 		} catch (MqttException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void unSubscribe(){
+		if(client==null){
+			throw new RuntimeException();
+		}
+		if(options.getSubscribeTopics()==null || options.getSubscribeTopics().length==0){
+			throw new RuntimeException("请选择要订阅的Topics");
+		}
+		try{
+			client.unsubscribe(options.getSubscribeTopics());
+		}catch (Exception e){
+
 		}
 	}
 }

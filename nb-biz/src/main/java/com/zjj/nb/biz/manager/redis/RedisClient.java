@@ -157,20 +157,26 @@ public class RedisClient {
         });
     }
 
+    /**
+     * 实现分布式锁(set key value EX NX)
+     * @param key
+     * @param seconds
+     * @param value
+     * @return
+     */
     public Boolean setExpireNx(final String key, final int seconds, final String value){
         Object obj=runTask(new CallBack() {
             @Override
             public Object call(Jedis jedis) {
                 jedis.select(DEFAULT_DB_INDEX);
-                if(jedis.setnx(key,value)==1L){
-                    jedis.expire(key,seconds);
-                    return Boolean.TRUE;
-                }
-                return Boolean.FALSE;
+                String result = jedis.set(key,value,"NX","EX",seconds);
+                return "OK".equals(result);
             }
         });
         return (Boolean)obj;
     }
+
+
 
 
     public Object runTask(CallBack callBack) {

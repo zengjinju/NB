@@ -41,11 +41,11 @@ public class DefaultMqqHander extends MqttHandler {
 				mqttService.puhback(ctx.channel(),mqttMessage);
 				break;
 			case SUBSCRIBE:
-				MqttSubscribeMessage mqttSubscribeMessage=(MqttSubscribeMessage)mqttMessage;
-				MqttTopicSubscription topicSubscription=mqttSubscribeMessage.payload().topicSubscriptions().get(0);
-				String topicName=topicSubscription.topicName();
-				String value=TOPIC_MESSAGE_MAP.get(topicName);
-				mqttService.pubMessage(ctx.channel(),topicName,value,1,false);
+//				MqttSubscribeMessage mqttSubscribeMessage=(MqttSubscribeMessage)mqttMessage;
+//				MqttTopicSubscription topicSubscription=mqttSubscribeMessage.payload().topicSubscriptions().get(0);
+//				String topicName=topicSubscription.topicName();
+//				String value=TOPIC_MESSAGE_MAP.get(topicName);
+//				mqttService.pubMessage(ctx.channel(),topicName,value,1,false);
 				break;
 
 		}
