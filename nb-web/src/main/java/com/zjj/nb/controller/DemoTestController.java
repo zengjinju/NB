@@ -52,6 +52,8 @@ public class DemoTestController {
 	private ICacheProxy cacheProxy;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ApplicationContextUtil applicationContextUtil;
 
 	private Boolean flag = false;
 	private KdTree tree = null;
@@ -84,7 +86,7 @@ public class DemoTestController {
 	@RequestMapping("test")
 	public void test() {
 		//DemoTestController userService= (DemoTestController) ApplicationContextHelper.getInstance().getBean(this.getClass());
-		Map<String, UserService> map = ApplicationContextHelper.getInstance().getBeanOfType(UserService.class);
+		Map<String, UserService> map = applicationContextUtil.getBeanByType(UserService.class);
 		System.out.println(map);
 		System.out.println(ApplicationContextUtil.getBean("userServiceImpl"));
 	}

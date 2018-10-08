@@ -23,7 +23,7 @@ import javax.annotation.PostConstruct;
 /**
  * Created by admin on 2017/4/12.
  */
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements UserService,ApplicationContextAware,BeanFactoryAware,ResourceLoaderAware,BeanClassLoaderAware{
 
     @Autowired

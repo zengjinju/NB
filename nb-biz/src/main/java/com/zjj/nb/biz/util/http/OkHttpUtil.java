@@ -26,7 +26,7 @@ public class OkHttpUtil {
 	private static final OkHttpClient httpClient;
 	static{
 		httpClient=new OkHttpClient.Builder()
-				.connectTimeout(10, TimeUnit.SECONDS)
+				.connectTimeout(100, TimeUnit.SECONDS)
 				.readTimeout(1000,TimeUnit.MILLISECONDS)
 				.sslSocketFactory(createSSLSocketFactory()) //添加对HTTPS的支持
 				.hostnameVerifier(new HostnameVerifier() {
@@ -65,7 +65,7 @@ public class OkHttpUtil {
 			return null;
 		}
 		LOGGER.info("请求信息url:"+url+",param:"+jsonString);
-		RequestBody body=RequestBody.create(MediaType.parse("application/json"),jsonString);
+		RequestBody body=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),jsonString);
 		Request request=new Request.Builder()
 				.url(url)
 				.post(body)
@@ -74,7 +74,7 @@ public class OkHttpUtil {
 		try {
 			return httpClient.newCall(request).execute().body().bytes();
 		} catch (IOException e) {
-			throw new RuntimeException(e.getCause());
+			throw new RuntimeException(e);
 		}
 	}
 

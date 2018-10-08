@@ -28,9 +28,9 @@ public class Producer {
 
 	private static final String topic = "RUNING_HEART_STATUS_SYNC_TEST";
 
-	private static final String GroupId = "GID_STATUS_SYNC";
+	private static final String GroupId = "GID_lefit_device_test";
 
-	private static final String clientId = "GID_STATUS_SYNC@@@zjj_send_test";
+	private static final String clientId = "GID_lefit_device_test@@@zjj_send_test";
 
 	private static final String PUBLISH_TOPIC = topic + "/device/";
 

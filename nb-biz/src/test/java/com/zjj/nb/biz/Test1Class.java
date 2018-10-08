@@ -6,14 +6,17 @@ import com.zjj.nb.biz.util.DateUtil;
 import com.zjj.nb.biz.util.MD5Util;
 import com.zjj.nb.biz.util.http.HttpUtil;
 import com.zjj.nb.biz.util.http.OkHttpUtil;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.imageio.stream.FileImageOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.*;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -24,24 +27,25 @@ import java.util.zip.CRC32;
  */
 public class Test1Class {
 
+    private static final Logger logger = LoggerFactory.getLogger(Test1Class.class);
+
     private static Object object=new Object();
     private static final String appId= "1257141345";
     private static final String secretId ="AKIDE3v9Qj8Ne9Uh1RQKkAbJwU8iBWkrtdFg";
     private static final String secretKey ="QemwxnTyKWWKxOdgXIrEPPNAlBUbWIuK";
     private static final String baiduDetectUrl = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
 
-    public static void main(String[] args) throws Exception {
-      String  value = "2018-8-4 8:3:00";
-      System.out.println(DateUtil.parseStr2Date(value,"yyyy-MM-dd HH:mm:ss"));
+    public static void main(String[] args)  {
+        try{
+            Double d = Double.parseDouble("a");
+        }catch (Exception e){
+            logger.error("error key={}",11,e);
+        }
+
     }
 
     public static Long crc32(String value){
-        if(StringUtils.isEmpty(value)){
-            return null;
-        }
-        CRC32 crc32 = new CRC32();
-        crc32.update(value.getBytes());
-        return crc32.getValue();
+        return null;
     }
 
 //    public void createOrder(String productNo){
