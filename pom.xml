@@ -339,6 +339,33 @@
         <artifactId>okhttp</artifactId>
         <version>3.6.0</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>2.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aliyun.openservices</groupId>
+        <artifactId>aliyun-log</artifactId>
+        <version>0.6.24</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aliyun.openservices</groupId>
+        <artifactId>log-loghub-producer</artifactId>
+        <version>0.1.16</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.7</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.binarywang</groupId>
+        <artifactId>java-emoji-converter</artifactId>
+        <version>0.1.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

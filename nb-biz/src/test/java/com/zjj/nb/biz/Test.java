@@ -22,11 +22,7 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-		int a=3,b=4;
-		a=a^b;
-		b=a^b;
-		a=a^b;
-		System.out.println(a+","+b);
+
 	}
 
 	public static int getSum(int a, int b) {
@@ -69,4 +65,5 @@ public class Test {
 //		}
 //		int r=
 //	}
+
 }

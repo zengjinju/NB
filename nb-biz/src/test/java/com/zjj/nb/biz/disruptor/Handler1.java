@@ -11,8 +11,7 @@ import java.util.UUID;
 public class Handler1 implements EventHandler<ObjectEvent> {
 	@Override
 	public void onEvent(ObjectEvent objectEvent, long l, boolean b) throws Exception {
-		Thread.sleep(1000);
 		objectEvent.setValue("event"+l);
-		System.out.println("price"+objectEvent.getPrice());
+		System.out.println("handler1,id="+l);
 	}
 }

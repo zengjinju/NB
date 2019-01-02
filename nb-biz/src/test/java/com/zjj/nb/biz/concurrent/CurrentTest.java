@@ -1,4 +1,4 @@
-package com.zjj.nb.biz;
+package com.zjj.nb.biz.concurrent;
 
 
 import java.util.concurrent.*;

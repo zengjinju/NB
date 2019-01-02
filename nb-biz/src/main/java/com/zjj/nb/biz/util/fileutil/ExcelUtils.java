@@ -1,20 +1,16 @@
 package com.zjj.nb.biz.util.fileutil;
 
 import com.zjj.nb.biz.annotation.ExcelFieldAnnotation;
+import com.zjj.nb.biz.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jinju.zeng on 2017/6/13.
@@ -22,28 +18,20 @@ import java.util.Map;
 @Slf4j
 public class ExcelUtils {
 
-    public static <T> List<T> processXls(InputStream input, T t) {
+    public static <T> List<T> importExcel(InputStream input, Class<T> t) {
         List<T> list = new ArrayList<>();
-        if(input==null){
-            log.error("请选择需要解析的Excel文件");
-            return null;
-        }
-        if(t==null){
-            log.error("解析对象不能为空");
-            return null;
-        }
         try {
             HSSFWorkbook wb = new HSSFWorkbook(input);
             HSSFSheet sheet = wb.getSheetAt(0);
-            Field[] fields = t.getClass().getDeclaredFields();
+            Field[] fields = t.getDeclaredFields();
             Map<Integer, Integer> map = getRelationXlsWithObject(sheet, fields);
             if (CollectionUtils.isEmpty(map)) {
                 log.info("xml文件标题和对象字段对应关系解析错误");
-                return null;
+                return list;
             }
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 HSSFRow row = sheet.getRow(i);
-                list.add(doProcess(row, map, t));
+                list.add(doProcess(row, map, fields,t));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,11 +57,10 @@ public class ExcelUtils {
         return map;
     }
 
-    private static <T> T doProcess(HSSFRow row, Map<Integer, Integer> map, T t) {
+    private static <T> T doProcess(HSSFRow row, Map<Integer, Integer> map, Field[] fields,Class<T> t) {
         T var1 = null;
         try {
-            var1 = (T) t.getClass().newInstance();
-            Field[] fields = var1.getClass().getDeclaredFields();
+            var1 =  t.getDeclaredConstructor().newInstance();
             for (int i = 0; i < row.getLastCellNum(); i++) {
                 Field field = fields[map.get(i)];
                 if (!field.isAccessible()) {
@@ -81,44 +68,50 @@ public class ExcelUtils {
                     field.setAccessible(true);
                 }
                 String value="";
-                switch(row.getCell(i).getCellType()){
-                    case HSSFCell.CELL_TYPE_NUMERIC:
-                        value=String.valueOf(row.getCell(i).getNumericCellValue());
-                        break;
-                    case HSSFCell.CELL_TYPE_STRING:
-                        value=row.getCell(i).getStringCellValue();
+                Cell cell = row.getCell(i);
+                if (cell == null){
+                    continue;
+                }
+                switch (cell.getCellType()) {
+                    case Cell.CELL_TYPE_NUMERIC:
+                        //日期类型
+                        if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                            value = DateUtil.parseDateToString(cell.getDateCellValue());
+                        } else {
+                            value = cell.toString();
+                        }
                         break;
                     default:
-                        value=row.getCell(i).toString();
+                        value = cell.toString();
                 }
                 if("".equals(value)){
                     continue;
                 }
                 Type type = field.getGenericType();
                 if (type.equals(Integer.class)) {
-                    field.set(var1, (int)Double.parseDouble(value));
+                    field.set(var1, Math.abs(Double.valueOf(value).intValue()));
                 } else if (type.equals(Long.class)) {
-                    field.set(var1, (long)Double.parseDouble(value));
+                    field.set(var1, Double.valueOf(value).longValue());
                 } else if (type.equals(Double.class)) {
                     field.set(var1, Double.parseDouble(value));
                 } else if (type.equals(Byte.class)) {
-                    field.set(var1, Byte.parseByte(value));
+                    field.set(var1, Double.valueOf(value).byteValue());
                 } else if (type.equals(Boolean.class)) {
                     field.set(var1, Boolean.parseBoolean(value));
                 } else if (type.equals(short.class)) {
-                    field.set(var1, Short.parseShort(value));
+                    field.set(var1, Double.valueOf(value).shortValue());
                 } else if (type.equals(float.class)) {
                     field.set(var1, Float.parseFloat(value));
                 } else if (type.equals(char.class)) {
                     field.set(var1, value.charAt(0));
                 }else if(type.equals(String.class)){
                     field.set(var1,value);
+                }else if(type.equals(Date.class)){
+                    field.set(var1,DateUtil.parseStr2Date(value,"yyyy-MM-dd HH:mm:ss"));
                 }
             }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Excel解析出现异常",e);
         }
         return var1;
     }

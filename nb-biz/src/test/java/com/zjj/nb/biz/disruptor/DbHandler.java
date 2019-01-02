@@ -18,7 +18,7 @@ public class DbHandler implements EventHandler<ObjectEvent>, WorkHandler<ObjectE
 	public void onEvent(ObjectEvent objectEvent) throws Exception {
 		//做业务逻辑
 		objectEvent.setId(UUID.randomUUID().toString());
-		System.out.println(objectEvent.getId());
+		System.out.println("dbHandler,id="+objectEvent.getId());
 	}
 }
 

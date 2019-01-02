@@ -56,6 +56,6 @@ public class MD5Util {
     }
 
     public static void main(String[] args){
-        System.out.println(Long.toHexString(123L));
+        System.out.println(md5("123abc"));
     }
 }
