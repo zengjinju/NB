@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.zip.CRC32;
 
 /**
  * Created by admin on 2017/12/15.
@@ -22,7 +23,10 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-
+		String value = "2a19e03e5336161398e4e602a02a1afc2942620271154745124379";
+		CRC32 crc32 = new CRC32();
+		crc32.update(value.getBytes());
+		System.out.println(crc32.getValue());
 	}
 
 	public static int getSum(int a, int b) {

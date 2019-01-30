@@ -38,11 +38,6 @@ public class BloomFilter {
 
 	private Jedis jedis;
 
-	@PostConstruct
-	private void init(){
-		jedis = jedisPool.getResource();
-	}
-
 	public void setExpectedInsertions(Long expectedInsertions) {
 		this.expectedInsertions = expectedInsertions;
 	}
@@ -95,7 +90,7 @@ public class BloomFilter {
 	}
 
 	private long hash(String key){
-		Charset charset = Charset.forName("UFT-8");
+		Charset charset = Charset.forName("UTF-8");
 		return Hashing.murmur3_128().hashObject(key, Funnels.stringFunnel(charset)).asLong();
 	}
 
@@ -108,6 +103,8 @@ public class BloomFilter {
 	public Boolean isExit(String redisKey,String key){
 		long[] indexs = getIndexs(key);
 		Boolean result = Boolean.FALSE;
+		jedis = jedisPool.getResource();
+		jedis.select(1);
 		//这里使用了Redis管道来降低过滤器运行当中访问Redis次数
 		Pipeline pipeline = jedis.pipelined();
 		try {
@@ -127,6 +124,8 @@ public class BloomFilter {
 	 */
 	public void put(String redisKey,String key){
 		long[] indexs = getIndexs(key);
+		jedis = jedisPool.getResource();
+		jedis.select(1);
 		Pipeline pipeline = jedis.pipelined();
 		try {
 			for (long index : indexs){

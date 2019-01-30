@@ -1,6 +1,7 @@
 package com.zjj.nb.controller;
 
 import com.zjj.nb.biz.manager.localcache.CacheService;
+import com.zjj.nb.biz.manager.redis.BloomFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,8 @@ public class DemoTest2Controller {
 
     @Autowired
     private CacheService cacheService;
+    @Autowired
+    private BloomFilter bloomFilter;
 
 
     @RequestMapping("out1")
@@ -63,6 +66,12 @@ public class DemoTest2Controller {
         System.out.println(cacheService.get("zjj"));
         System.out.println(cacheService.get("zjj"));
         System.out.println(cacheService.get("zjj"));
+    }
+
+    @RequestMapping("testBoolm")
+    public void test_boolm(){
+        Boolean flag = bloomFilter.isExit("bloom_redis","test");
+        System.out.println(flag);
     }
 
 }
