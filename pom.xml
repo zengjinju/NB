@@ -243,6 +243,12 @@
         <groupId>com.netflix.hystrix</groupId>
         <artifactId>hystrix-core</artifactId>
         <version>1.5.11</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!--dom4j 解析XML-->
@@ -435,7 +441,7 @@
     <dependency>
       <groupId>com.github.davidmoten</groupId>
       <artifactId>rtree</artifactId>
-      <version>0.8.1beta</version>
+      <version>0.8.5</version>
     </dependency>
   </dependencies>
 

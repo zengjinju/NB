@@ -23,16 +23,16 @@ import static com.github.davidmoten.rtree.Entries.entry;
 public class RTreeUtil {
 
 	public static void main(String[] args){
-		List<Entry<Object, Point>> entries = createRandomEntries(100000);
+		List<Entry<Object, Point>> entries = createRandomEntries(1000000);
 		int maxChildren = 8;
 		long start=System.nanoTime();
 		RTree<Object, Point> tree = RTree.maxChildren(maxChildren).<Object,Point>create().add(entries);
 		System.out.println("create Rtree time:"+(System.nanoTime()-start));
 //		tree.visualize(2000, 2000).save("greek.png");
-		start=System.nanoTime();
-		List<Entry<Object,Point>> list= tree.search(Geometries.circle(400,200,100)).toList().toBlocking()
+		start=System.currentTimeMillis();
+		List<Entry<Object,Point>> list= tree.search(Geometries.circle(400,200,10)).toList().toBlocking()
 				.single();
-		System.out.println("search cost time :"+(System.nanoTime()-start));
+		System.out.println("search cost time :"+(System.currentTimeMillis()-start));
 		for(Entry<Object,Point> entry : list){
 			System.out.println(entry.geometry().x()+","+entry.geometry().y());
 		}
