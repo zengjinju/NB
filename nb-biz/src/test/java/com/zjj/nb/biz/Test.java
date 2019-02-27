@@ -27,6 +27,7 @@ public class Test {
 		CRC32 crc32 = new CRC32();
 		crc32.update(value.getBytes());
 		System.out.println(crc32.getValue());
+
 	}
 
 	public static int getSum(int a, int b) {

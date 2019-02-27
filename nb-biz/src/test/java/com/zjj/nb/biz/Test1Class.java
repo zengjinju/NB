@@ -41,11 +41,14 @@ public class Test1Class {
     private static final String baiduDetectUrl = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
 
     public static void main(String[] args)  {
-        CRC32 crc32 = new CRC32();
-        String value = "65c07adb409f208f83b1b16df7022d49"+"2191151"+"268"+"1546075609"+"11";
-        crc32.update(value.getBytes());
-        System.out.println(crc32.getValue());
+       test1();
+       TestDto dto = new TestDto();
+       Integer a = dto.getNum() != 0 ? dto.getNum() : 0;
 
+    }
+
+    private static synchronized void test1(){
+        System.out.println("test");
     }
 
     public static Long crc32(String value){
