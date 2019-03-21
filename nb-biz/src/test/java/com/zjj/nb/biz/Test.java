@@ -23,10 +23,8 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-		String value = "2a19e03e5336161398e4e602a02a1afc2942620271154745124379";
-		CRC32 crc32 = new CRC32();
-		crc32.update(value.getBytes());
-		System.out.println(crc32.getValue());
+		char c = "".toCharArray()[0];
+		System.out.println(c);
 
 	}
 

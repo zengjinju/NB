@@ -105,6 +105,6 @@ public class TrieTree {
     		String[] s = values[i].split(":");
     		trieTree.createTrieTree(s[0],s[1]);
 		}
-		System.out.println(trieTree.get("abc"));
+		System.out.println(trieTree.get("AbC_d"));
 	}
 }
