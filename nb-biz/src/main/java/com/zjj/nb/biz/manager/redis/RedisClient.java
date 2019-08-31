@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.exceptions.JedisException;
@@ -229,5 +230,29 @@ public class RedisClient {
             log.error("返回jedis资源异常，将强制关闭jedis", e);
             jedis.close();
         }
+    }
+
+    public void batchSet(String value,String ... keys){
+        runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            Pipeline pipe = jedis.pipelined();
+            for (String key : keys){
+                pipe.set(key,value);
+            }
+            pipe.sync();
+            return true;
+        });
+    }
+
+    public List<Object> batchGet(String ... keys){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            Pipeline pipe = jedis.pipelined();
+            for (String key : keys){
+                pipe.get(key);
+            }
+            return pipe.syncAndReturnAll();
+        });
+        return (List<Object>) result;
     }
 }

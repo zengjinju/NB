@@ -3,6 +3,8 @@ package com.zjj.nb.biz.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
+import com.esotericsoftware.reflectasm.FieldAccess;
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.google.common.collect.Maps;
 import com.zjj.nb.biz.annotation.IgnoreCheckAnnotation;
 import com.zjj.nb.biz.util.applicationcontext.ApplicationContextHelper;
@@ -87,7 +89,10 @@ public class BeanUtil {
             for (PropertyDescriptor pd : pds) {
                 String fieldName = pd.getName();
                 if (!"class".equals(fieldName)) {
-                    Object result = pd.getReadMethod().invoke(param);
+                    Method method = pd.getReadMethod();
+                    //跳过安全检查
+                    method.setAccessible(true);
+                    Object result = method.invoke(param);
                     if(result!=null) {
                         map.put(fieldName, result);
                     }
@@ -99,6 +104,25 @@ public class BeanUtil {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static Map<String,Object> getParams4Asm(Object param){
+        Map<String,Object> map = Maps.newHashMap();
+        //通过ASM字节码的方式获取类的增强类
+        MethodAccess access = MethodAccess.get(param.getClass());
+        String[] methodNames = access.getMethodNames();
+        for (String methodName : methodNames){
+            if (methodName.startsWith("get")){
+                int index = access.getIndex(methodName);
+                Object result = access.invoke(param,index);
+                String fieldName = methodName.substring(3);
+                char[] chars = fieldName.toCharArray();
+                chars[0] = Character.toLowerCase(chars[0]);
+                fieldName = String.valueOf(chars);
+                map.put(fieldName,result);
+            }
         }
         return map;
     }

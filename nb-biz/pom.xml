@@ -133,5 +133,15 @@
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>reflectasm</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -14,7 +14,6 @@ import java.util.Iterator;
 public class SelectSockets {
 
     private static final int PORT = 8080;
-    private static ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
     public static void main(String[] args) {
         go();
@@ -23,11 +22,10 @@ public class SelectSockets {
     public static void go() {
         try {
             ServerSocketChannel serverChannel = ServerSocketChannel.open();
-            ServerSocket socket = serverChannel.socket();
             //创建一个选择器
             Selector selector = Selector.open();
             //监听8080端口
-            socket.bind(new InetSocketAddress(PORT));
+            serverChannel.socket().bind(new InetSocketAddress(PORT));
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {
@@ -55,31 +53,34 @@ public class SelectSockets {
                     if(key.isWritable()){
 
                     }
-
+                    it.remove();
                 }
-                it.remove();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void sayHello(SocketChannel channel) throws IOException {
-        buffer.clear();
-        buffer.put("hello zjj".getBytes());
-        buffer.flip();
-        channel.write(buffer);
+    private static void write(SocketChannel channel) throws IOException {
+        ByteBuffer writeBuffer = ByteBuffer.allocate(1024);
+        writeBuffer.put("hello zjj\n".getBytes());
+        writeBuffer.flip();
+        channel.write(writeBuffer);
     }
 
     private static void readDataFromSocket(SelectionKey key) throws IOException {
         SocketChannel channel = (SocketChannel) key.channel();
-        buffer.clear();
-        WritableByteChannel out=Channels.newChannel(System.out);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
         while(channel.read(buffer)!=-1){
             buffer.flip();
-            while(buffer.hasRemaining()){
-                out.write(buffer);
+            if (!buffer.hasRemaining()){
+                break;
             }
+            byte[] bytes = new byte[buffer.remaining()];
+            buffer.get(bytes);
+            String body = new String(bytes,"UTF-8");
+            System.out.println(body);
+            write(channel);
             buffer.clear();
         }
     }

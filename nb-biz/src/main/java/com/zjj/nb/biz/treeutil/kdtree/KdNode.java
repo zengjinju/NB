@@ -22,7 +22,7 @@ public class KdNode {
 	 */
 	private int leaf=0;
 
-	/**
+	/**K
 	 * 左节点
 	 */
 	private KdNode kd_left;

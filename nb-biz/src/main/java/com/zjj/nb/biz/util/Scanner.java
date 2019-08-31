@@ -1,11 +1,13 @@
 package com.zjj.nb.biz.util;
 
+import com.zjj.nb.biz.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
@@ -20,10 +22,10 @@ public class Scanner {
 	/**
 	 * 从指定package中获取所有的class
 	 * @param packageName
-	 * @param <T>
+	 * @param
 	 * @return
 	 */
-	public Set<Class<?>> getClasses(String packageName){
+	public Set<Class<?>> getClassesByAnnotation(String packageName, Class<? extends Annotation> annotationClass){
 		if (packageName == null || "".equals(packageName)){
 			return null;
 		}
@@ -43,7 +45,9 @@ public class Scanner {
 					//获取包的物理路径
 					String filePath = URLDecoder.decode(url.getFile(),"UTF-8");
 					//扫描包下的所有.class文件
-					findAndAddClassesPackageByFile(packageName,filePath,recursive,classSet);
+					findClass(packageName,filePath,classSet,(Class<?> clazz)->{
+						return clazz.isAnnotationPresent(annotationClass);
+					});
 				}
 			}
 		}catch (Exception e){
@@ -53,14 +57,13 @@ public class Scanner {
 	}
 
 	/**
-	 *
+	 * 在指定包下按照指定规则扫码class
 	 * @param packageName
 	 * @param packagePath
-	 * @param recursive
-	 * @param classes
-	 * @param <T>
+	 * @param classSet
+	 * @param filter
 	 */
-	public void findAndAddClassesPackageByFile(String packageName, String packagePath, Boolean recursive,Set<Class<?>> classes){
+	private void findClass(String packageName,String packagePath,Set<Class<?>> classSet,Filter<Class<?>> filter){
 		File dir = new File(packagePath);
 		if (!dir.exists() || !dir.isDirectory()){
 			logger.warn("用户定义包名{}下没有任何文件",packageName);
@@ -70,45 +73,67 @@ public class Scanner {
 		File[] dirFiles = dir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
-				return (recursive && pathname.isDirectory()) || pathname.getName().endsWith(".class");
+				return (pathname.isDirectory()) || pathname.getName().endsWith(".class");
 			}
 		});
 		for (File file : dirFiles){
 			if (file.isDirectory()){
-				findAndAddClassesPackageByFile(packageName+"."+file.getName(),file.getAbsolutePath(),recursive,classes);
+				findClass(packageName+"."+file.getName(),file.getAbsolutePath(),classSet,filter);
 			} else {
 				String className = file.getName().substring(0,file.getName().lastIndexOf("."));
-				try{
-					classes.add(Thread.currentThread().getContextClassLoader().loadClass(packageName+"."+className));
-				}catch (Exception e){
-					logger.error("load class error");
+				try {
+					Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(packageName+"."+className);
+					if (filter != null && filter.accept(clazz)){
+						classSet.add(clazz);
+					}
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 	}
 
-	public Map<String,Class<?>> getClassByAnnotation(){
-		Map<String,Class<?>> map = new HashMap<>(16);
-		Set<Class<?>> classes = getClasses("com.zjj.nb.biz");
-		if (classes == null || classes.size() == 0){
-			return map;
+	/**
+	 *
+	 * @param packageName
+	 * @param superClass
+	 * @return
+	 */
+	public Set<Class<?>> getClassBySuper(String packageName,Class<?> superClass){
+		if (packageName == null || "".equals(packageName)){
+			return null;
 		}
-		for (Class<?> clazz : classes){
-			Service annotation = clazz.getAnnotation(Service.class);
-			if (annotation != null){
-				char[] chars = clazz.getSimpleName().toCharArray();
-				chars[0] = Character.toLowerCase(chars[0]);
-				String className = String.valueOf(chars);
-				String key = !"".equals(annotation.value()) ? annotation.value() : className;
-				map.put(key,clazz);
+		Set<Class<?>> classSet = new HashSet<>(256);
+		//获取包所在的路径
+		String packageDirName = packageName.replace(".","/");
+		Enumeration<URL> dirs;
+		try{
+			dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+			while (dirs.hasMoreElements()){
+				URL url = dirs.nextElement();
+				String protocol = url.getProtocol();
+				if ("file".equals(protocol)){
+					//获取包所在的物理路径
+					String filePath = URLDecoder.decode(url.getFile(),"UTF-8");
+					findClass(packageName,filePath,classSet,(Class<?> clazz)->{
+						return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
+					});
+				}
 			}
+		}catch (Exception e){
+
 		}
-		return map;
+		return classSet;
+	}
+
+
+	public static interface Filter<T>{
+		Boolean accept(T var);
 	}
 
 	public static void main(String[] args){
 		Scanner scanner = new Scanner();
-		Map<String,Class<?>> classSet = scanner.getClassByAnnotation();
+		Set<Class<?>> classSet = scanner.getClassBySuper("com.zjj.nb.biz",UserService.class);
 		System.out.println(classSet);
 	}
 }

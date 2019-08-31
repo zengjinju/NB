@@ -1,17 +1,29 @@
 package com.zjj.nb.biz;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.zjj.nb.biz.util.BeanUtil;
 import com.zjj.nb.biz.util.DateUtil;
+import com.zjj.nb.biz.util.MD5Util;
+import com.zjj.nb.biz.util.fileutil.FileScanUtil;
+import com.zjj.nb.dao.entity.userDAO;
 import org.apache.commons.lang.math.NumberUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
 /**
@@ -23,8 +35,9 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-		char c = "".toCharArray()[0];
-		System.out.println(c);
+		Long sum = 16L;
+		System.out.println(Long.bitCount(sum));
+
 
 	}
 
@@ -68,5 +81,36 @@ public class Test {
 //		}
 //		int r=
 //	}
+
+
+	private static class TestFork extends RecursiveAction{
+
+		private List<String> list;
+		public TestFork(List<String> list){
+			this.list = list;
+		}
+
+		@Override
+		protected void compute() {
+			List<TestFork> forkList = new ArrayList<>();
+			if (list.size() >= 2500){
+				List<String> leftSubList = list.subList(0,list.size() /2);
+				List<String> rightSubList = list.subList(list.size() / 2,list.size());
+				forkList.add(new TestFork(leftSubList));
+				forkList.add(new TestFork(rightSubList));
+			} else {
+				List<String> list1 = new ArrayList<>();
+				for (String item : list){
+					list1.add(item);
+				}
+			}
+			if (!list.isEmpty()) {
+				// 在当前的 ForkJoinPool 上调度所有的子任务
+				for (TestFork task : invokeAll(forkList)) {
+					task.join();
+				}
+			}
+		}
+	}
 
 }
