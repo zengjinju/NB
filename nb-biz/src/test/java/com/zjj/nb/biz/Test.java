@@ -7,8 +7,12 @@ import com.zjj.nb.biz.util.BeanUtil;
 import com.zjj.nb.biz.util.DateUtil;
 import com.zjj.nb.biz.util.MD5Util;
 import com.zjj.nb.biz.util.fileutil.FileScanUtil;
+import com.zjj.nb.biz.util.http.HttpUtil;
+import com.zjj.nb.biz.util.http.OkHttpUtil;
 import com.zjj.nb.dao.entity.userDAO;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -35,8 +39,28 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-		Long sum = 16L;
-		System.out.println(Long.bitCount(sum));
+		Map<String,String> params = new HashMap<>();
+		params.put("cmd","1");
+		params.put("device_no","123456");
+		params.put("sub_id","111");
+		params.put("uid","HD1006");
+		params.put("type","1");
+		params.put("score","100");
+		Map<String,String> headers = new HashMap<>();
+		headers.put("Connection","keep-alive");
+		headers.put("Keep-Alive","timeout=60");
+		headers.put("Content-Type","application/json;charset=UTF-8");
+		while(true) {
+				threadPool.execute(()->{
+	String result = OkHttpUtil.post("http://jt26996495.zicp.vip:26329/physical-report/upload/data/record", JSON.toJSONString(params), headers);
+				System.out.println(result);
+				});
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
 
 	}

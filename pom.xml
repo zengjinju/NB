@@ -455,6 +455,11 @@
       <artifactId>rtree</artifactId>
       <version>0.8.5</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.davidmoten</groupId>
+      <artifactId>grumpy-core</artifactId>
+      <version>0.2.2</version>
+    </dependency>
   </dependencies>
 
 
