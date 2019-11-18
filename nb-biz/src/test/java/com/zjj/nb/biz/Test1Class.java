@@ -41,9 +41,17 @@ public class Test1Class {
     private static final String baiduDetectUrl = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
 
     public static void main(String[] args)  {
-       test1();
-       TestDto dto = new TestDto();
-       Integer a = dto.getNum() != 0 ? dto.getNum() : 0;
+      List<Integer> list = new ArrayList<>(Arrays.asList(3,1,null,5,2,null));
+      list.sort(new Comparator<Integer>() {
+          @Override
+          public int compare(Integer o1, Integer o2) {
+              if (o1 == null || o2 == null){
+                  return -1;
+              }
+              return o2-o1;
+          }
+      });
+      System.out.println(list);
 
     }
 

@@ -27,14 +27,14 @@ public class RTreeUtil {
 	public static void main(String[] args){
 		int maxChildren = 8;
 		RTree<Object, Point> tree = RTree.maxChildren(maxChildren).<Object,Point>create();
-		tree.add("test1",Geometries.pointGeographic(120.008384,30.279711));
-		tree.add("test2",Geometries.pointGeographic(120.003852,30.277400));
-		tree.add("test3",Geometries.pointGeographic(120.003979,30.293121));
-		tree.add("test4",Geometries.pointGeographic(120.046643,30.289109));
-		tree.add("test5",Geometries.pointGeographic(120.021893,30.243245));
+		tree = tree.add("test1",Geometries.pointGeographic(120.008384,30.279711));
+		tree = tree.add("test2",Geometries.pointGeographic(120.003852,30.277400));
+		tree = tree.add("test3",Geometries.pointGeographic(120.003979,30.293121));
+		tree = tree.add("test4",Geometries.pointGeographic(120.046643,30.289109));
+		tree = tree.add("test5",Geometries.pointGeographic(120.021893,30.243245));
 
 		Long start=System.currentTimeMillis();
-		List<Entry<Object,Point>> list= search(tree, Geometries.point(120.002283,30.285632), 2)
+		List<Entry<Object,Point>> list= search(tree, Geometries.point(120.002283,30.285632), 1)
 				// get the result
 				.toList().toBlocking().single();
 		System.out.println("search cost time :"+(System.currentTimeMillis()-start));
