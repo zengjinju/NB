@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zjj.nb.biz.jkd8stream.StreamTest;
 import com.zjj.nb.biz.util.DateUtil;
+import com.zjj.nb.biz.util.Jdk8DateUtil;
 import com.zjj.nb.biz.util.MD5Util;
 import com.zjj.nb.biz.util.http.HttpUtil;
 import com.zjj.nb.biz.util.http.OkHttpUtil;
@@ -19,6 +20,8 @@ import org.springframework.util.StringUtils;
 import javax.imageio.stream.FileImageOutputStream;
 import java.io.*;
 import java.lang.reflect.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,17 +44,10 @@ public class Test1Class {
     private static final String baiduDetectUrl = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
 
     public static void main(String[] args)  {
-      List<Integer> list = new ArrayList<>(Arrays.asList(3,1,null,5,2,null));
-      list.sort(new Comparator<Integer>() {
-          @Override
-          public int compare(Integer o1, Integer o2) {
-              if (o1 == null || o2 == null){
-                  return -1;
-              }
-              return o2-o1;
-          }
-      });
-      System.out.println(list);
+      BigDecimal item = new BigDecimal(100);
+        item.add(new BigDecimal(100));
+      System.out.println(item);
+
 
     }
 
