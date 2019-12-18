@@ -17,7 +17,6 @@ public class SkipList<T> {
 	private int num;
 
 	private int height;
-
 	/**
 	 * 表头
 	 */
@@ -43,6 +42,11 @@ public class SkipList<T> {
 		r = new Random();
 	}
 
+	/**
+	 * 查找元素，直到最底层的原始链表
+	 * @param key
+	 * @return
+	 */
 	private SkipListEntry findEntry(Integer key){
 		SkipListEntry p = head;
 		while (true){

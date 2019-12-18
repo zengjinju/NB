@@ -44,11 +44,9 @@ public class Test1Class {
     private static final String baiduDetectUrl = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
 
     public static void main(String[] args)  {
-      BigDecimal item = new BigDecimal(100);
-        item.add(new BigDecimal(100));
-      System.out.println(item);
-
-
+       BigDecimal month  = BigDecimal.ZERO;
+       month = month.add(new BigDecimal(100));
+       System.out.println(month);
     }
 
     private static synchronized void test1(){

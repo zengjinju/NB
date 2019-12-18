@@ -18,6 +18,20 @@ public class InsertSort {
 		}
 	}
 
+	public static void sort(String[] a,int lo,int hi,int d){
+		for (int i=lo;i<=hi;i++){
+			for (int j = i;j>lo &&less(a[j],a[j-1],d);j--){
+				String t = a[j-1];
+				a[j-1] = a[j];
+				a[j] = t;
+			}
+		}
+	}
+
+	private static Boolean less(String v,String w,int d){
+		return v.substring(d).compareTo(w.substring(d)) < 0;
+	}
+
 	public static void main(String[] args){
 		Integer[] a = {10,9,11,15,13,18,17,2,8,14};
 		sort(a,0,a.length - 1);
