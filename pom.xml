@@ -21,7 +21,7 @@
     <aspectj-version>1.8.9</aspectj-version>
     <org.springframework-version>4.2.4.RELEASE</org.springframework-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jetty.version>9.3.0.M1</jetty.version>
+    <jetty.version>11.0.0.beta3</jetty.version>
   </properties>
 
   <dependencyManagement>
