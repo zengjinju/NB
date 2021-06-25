@@ -37,7 +37,7 @@ public class RedisLock {
 
     public Object lock(final String key, final LockCallBack callBack) {
         if (StringUtils.isEmpty(key)) {
-            log.info("lock key为空");
+//            log.info("lock key为空");
             return false;
         }
         Object result = redisClient.runTask(new CallBack() {
@@ -59,7 +59,7 @@ public class RedisLock {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            log.info("系统在执行任务时出现未知异常:" + e);
+//            log.info("系统在执行任务时出现未知异常:" + e);
             throw e;
         } finally {
             releaseLock(jedis, key, map);

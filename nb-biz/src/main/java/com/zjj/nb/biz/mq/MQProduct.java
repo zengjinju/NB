@@ -24,7 +24,7 @@ public class MQProduct {
         producer.setInstanceName(INSTANCE_NAME);
         try {
             producer.start();
-            Message msg = new Message("test-zjj", "TagB", "hello_zjj_abc_123".getBytes());
+            Message msg = new Message("TestExample-zjj", "TagB", "hello_zjj_abc_123".getBytes());
             SendResult result = producer.send(msg);
             log.info("mq send success，id:{},status:{}",result.getMsgId(),result.getSendStatus());
         } catch (MQClientException e) {

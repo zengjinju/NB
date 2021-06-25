@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
@@ -254,5 +255,85 @@ public class RedisClient {
             return pipe.syncAndReturnAll();
         });
         return (List<Object>) result;
+    }
+
+    /**
+     * 基于HyperLogLog的大量数据统计
+     * @param key
+     * @param values
+     */
+    public void hyperLogAdd(String key,String ... values){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            return jedis.pfadd(key,values);
+        });
+    }
+
+    public Long hyperLogCount(String key){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            return jedis.pfcount(key);
+        });
+        return (Long) result;
+    }
+
+    /**
+     * HyperLogLog的多key合并
+     * @param keys
+     */
+    public String  hyperLogUnion(String destination ,String ... keys){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            return jedis.pfmerge(destination,keys);
+        });
+        return result.toString();
+    }
+
+
+    /**
+     * bitmap的二值状态统计
+     *
+     * 使用用例 https://mp.weixin.qq.com/s/MbrEkyiFnHq_5f9M3pWZeg
+     */
+    public void setBit(String key,long offset,String value){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            return jedis.setbit(key,offset,value);
+        });
+    }
+
+    /**
+     * 返回给定的bit数组中值为1的数量
+     * @param key
+     * @return
+     */
+    public long bitCount(String key){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            return jedis.bitcount(key);
+        });
+        return (Long)result;
+    }
+
+    /**
+     * 返回数据表示 Bitmap 中第一个值为 bitValue 的 offset 位置
+     * @param key
+     * @param startOffset
+     * @param endOffset
+     * @param bitValue
+     * @return
+     */
+    public long bitTop(String key,Long startOffset,Long endOffset,Boolean bitValue){
+        Object result = runTask((Jedis jedis)->{
+            jedis.select(DEFAULT_DB_INDEX);
+            if (startOffset != null && endOffset == null){
+                return jedis.bitpos(key,bitValue,new BitPosParams(startOffset));
+            } else if (startOffset != null && endOffset != null){
+                return jedis.bitpos(key,bitValue,new BitPosParams(startOffset,endOffset));
+            } else {
+                return jedis.bitpos(key,bitValue);
+            }
+        });
+        return (Long)result + 1;
     }
 }

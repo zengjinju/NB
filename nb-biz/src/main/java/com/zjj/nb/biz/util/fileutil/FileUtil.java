@@ -44,8 +44,8 @@ public class FileUtil {
     }
 
     public static void main(String[] args) {
-        Path source = Paths.get("/Users/admin/test/service/AccountAmountService.java");
-        Path target = Paths.get("/Users/admin/test/service/abc.txt");
+        Path source = Paths.get("/Users/admin/TestExample/service/AccountAmountService.java");
+        Path target = Paths.get("/Users/admin/TestExample/service/abc.txt");
         fileCopy(source, target);
     }
 }

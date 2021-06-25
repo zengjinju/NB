@@ -11,6 +11,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -22,6 +23,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import java.util.concurrent.Future;
  */
 @Slf4j
 public class HttpUtil {
+    private static final Logger log = LoggerFactory.getLogger(HttpUtil.class);
     private final static String defaultCharset = "UTF-8";
     private static CloseableHttpAsyncClient httpclient = createClient();
 
@@ -194,7 +198,29 @@ public class HttpUtil {
             return EntityUtils.toString(entity, charset);
         } catch (Exception e) {
             log.error("当前请求出现未知异常，" + e);
-            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String postData(String url,String data,Header[] headers){
+        try {
+            HttpPost post = new HttpPost(url);
+            if (headers != null && headers.length > 0) {
+                post.setHeaders(headers);
+            }
+            if (data != null) {
+                post.setEntity(new StringEntity(data,defaultCharset));
+            }
+            Future<HttpResponse> result = httpclient.execute(post, null);
+            HttpResponse response = result.get();
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                log.error("response code is not 200,code:{},result:{}",response.getStatusLine().getStatusCode(),response.getEntity().toString());
+                return null;
+            }
+            HttpEntity entity = response.getEntity();
+            return EntityUtils.toString(entity, defaultCharset);
+        } catch (Exception e) {
+            log.error("当前请求出现未知异常，" + e);
         }
         return null;
     }
@@ -208,7 +234,7 @@ public class HttpUtil {
 //        String result=post("http://172.16.20.8:449",new HashMap<String, String>(),null);
 //        System.out.println(result);
 
-        String str=get("http://192.168.0.104:8088/test/sdk-service");
+        String str=get("http://192.168.0.104:8088/TestExample/sdk-service");
 //        JSONObject object=JSONObject.parseObject(str).get("data");
         JSONArray array=JSONArray.parseArray(JSONObject.parseObject(str).get("data").toString());
         System.out.println(str);

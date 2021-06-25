@@ -23,7 +23,7 @@ public class NbServer {
         context.setDescriptor("./nb-web/src/main/webapp/WEB-INF/web.xml");
         context.setResourceBase("./nb-web/src/main/webapp");
         //解决静态资源修改后不能重新加载的问题
-        context.setDefaultsDescriptor("./nb-web/src/test/resources/webdefault.xml");
+        context.setDefaultsDescriptor("./nb-web/src/TestExample/resources/webdefault.xml");
 
         context.setParentLoaderPriority(true);
         server.setHandler(context);

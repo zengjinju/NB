@@ -1,6 +1,8 @@
 package com.zjj.nb.biz.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import java.util.regex.Pattern;
 public class IPUtils {
 
 	private static final String REGULAR_IPV4 = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[09][0-9]|[1-9][0-9]|[0-9])$";
+	private static final Logger logger = LoggerFactory.getLogger(IPUtils.class);
+	public static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
 
 	public static String getRemoteAddress(HttpServletRequest request) {
 		if (request == null) {
@@ -67,27 +71,56 @@ public class IPUtils {
 	 * @return
 	 */
 	public static String internetIp() {
+		InetAddress localAddress = null;
+
 		try {
-			Enumeration<NetworkInterface> netWorks = NetworkInterface.getNetworkInterfaces();
-			InetAddress inetAddress;
-			Enumeration<InetAddress> inetAddresses = null;
-			while (netWorks.hasMoreElements()) {
-				inetAddresses = netWorks.nextElement().getInetAddresses();
-				while (inetAddresses.hasMoreElements()) {
-					inetAddress = inetAddresses.nextElement();
-					if (inetAddress != null
-							&& inetAddress instanceof Inet4Address
-							&& !inetAddress.isSiteLocalAddress()
-							&& !inetAddress.isLoopbackAddress()
-							&& inetAddress.getHostAddress().indexOf(":") == -1) {
-						return inetAddress.getHostAddress();
+			localAddress = InetAddress.getLocalHost();
+			if (isValidAddress(localAddress)) {
+				return localAddress.getHostAddress();
+			}
+		} catch (Throwable var6) {
+			logger.error("Failed to retriving ip address, " + var6.getMessage(), var6);
+		}
+
+		try {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+			if (interfaces != null) {
+				while(interfaces.hasMoreElements()) {
+					try {
+						NetworkInterface network = (NetworkInterface)interfaces.nextElement();
+						Enumeration<InetAddress> addresses = network.getInetAddresses();
+						if (addresses != null) {
+							while(addresses.hasMoreElements()) {
+								try {
+									InetAddress address = (InetAddress)addresses.nextElement();
+									if (isValidAddress(address)) {
+										return address.getHostAddress();
+									}
+								} catch (Throwable var5) {
+									logger.error("Failed to retriving ip address, " + var5.getMessage(), var5);
+								}
+							}
+						}
+					} catch (Throwable var7) {
+						logger.error("Failed to retriving ip address, " + var7.getMessage(), var7);
 					}
 				}
 			}
-		} catch (SocketException e) {
-			e.printStackTrace();
+		} catch (Throwable var8) {
+			logger.error("Failed to retriving ip address, " + var8.getMessage(), var8);
 		}
-		return null;
+
+		logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
+		return localAddress.getHostAddress();
+	}
+
+	private static boolean isValidAddress(InetAddress address) {
+		if (address != null && !address.isLoopbackAddress()) {
+			String name = address.getHostAddress();
+			return name != null && !"0.0.0.0".equals(name) && !"127.0.0.1".equals(name) && IP_PATTERN.matcher(name).matches();
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -106,5 +139,9 @@ public class IPUtils {
 	public static String getHost() {
 		String internetIp = internetIp();
 		return internetIp == null ? intranetIp() : internetIp;
+	}
+
+	public static void main(String[] vars){
+		System.out.print(getHost());
 	}
 }

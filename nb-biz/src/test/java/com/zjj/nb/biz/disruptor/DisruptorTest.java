@@ -23,7 +23,7 @@ public class DisruptorTest {
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
-				t.setName("test consumer thread"+threadId.getAndIncrement());
+				t.setName("TestExample consumer thread"+threadId.getAndIncrement());
 				return t;
 			}
 		}, ProducerType.SINGLE, new YieldingWaitStrategy());

@@ -1,6 +1,7 @@
 package com.zjj.nb.biz;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.zjj.nb.biz.util.BeanUtil;
@@ -15,8 +16,10 @@ import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -39,29 +42,135 @@ public class Test {
 	private static int sum=0;
 	private static CountDownLatch downLatch=new CountDownLatch(100);
 	public static void main(String[] args){
-		Map<String,String> params = new HashMap<>();
-		params.put("cmd","1");
-		params.put("device_no","123456");
-		params.put("sub_id","111");
-		params.put("uid","HD1006");
-		params.put("type","1");
-		params.put("score","100");
-		Map<String,String> headers = new HashMap<>();
-		headers.put("Connection","keep-alive");
-		headers.put("Keep-Alive","timeout=60");
-		headers.put("Content-Type","application/json;charset=UTF-8");
-		while(true) {
-				threadPool.execute(()->{
-	String result = OkHttpUtil.post("http://jt26996495.zicp.vip:26329/physical-report/upload/data/record", JSON.toJSONString(params), headers);
-				System.out.println(result);
-				});
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		Map<String,String> map = new HashMap<>();
+		map.put("住宿费","4001_3,4,5");
+		map.put("餐费","_6,7");
+		map.put("交通费","_8,9,10,12,13");
+		map.put("办公用品","");
+		map.put("团建费","");
+		map.put("其他","_14,15,16");
+		JSONArray array = JSONObject.parseArray("[{\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"费用发生日期\",\n" +
+				"\t\"value\": \"2020-6-29\",\n" +
+				"\t\"key\": \"TextField-KBYWC9RV\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"费用截止日期(出差填)\",\n" +
+				"\t\"value\": \"2020-6-29\",\n" +
+				"\t\"key\": \"TextField-KBYWC9RW\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"报销类别\",\n" +
+				"\t\"value\": \"住宿费\",\n" +
+				"\t\"key\": \"TextField-KBYVB40X\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextareaField\",\n" +
+				"\t\"label\": \"住宿费明细\",\n" +
+				"\t\"value\": \"住宿\",\n" +
+				"\t\"key\": \"TextareaField-KBYVDSLI\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"住宿费报销金额(元)\",\n" +
+				"\t\"value\": \"300\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDO\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"住宿费专票进项税额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDP\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextareaField\",\n" +
+				"\t\"label\": \"餐费明细\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextareaField-KBYVOM87\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"餐费报销金额(元)\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDQ\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextareaField\",\n" +
+				"\t\"label\": \"交通费明细\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextareaField-KBYVSVP1\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"火车票金额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWES6G\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"机票金额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDJ\"\n" +
+				"}, {\n" +
+				"\t\"label\": \"火车票金额\",\n" +
+				"\t\"value\": \"\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"网约车及巴士金额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDK\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"其他交通工具金额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDL\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextareaField\",\n" +
+				"\t\"label\": \"其他费用明细\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextareaField-KBYW108M\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"其他费用报销金额(元)\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDM\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"TextField\",\n" +
+				"\t\"label\": \"其他费用进项税额\",\n" +
+				"\t\"value\": \"\",\n" +
+				"\t\"key\": \"TextField-KBYWIUDN\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"DDPhotoField\",\n" +
+				"\t\"label\": \"住宿费发票照片(收据无效)\",\n" +
+				"\t\"value\": \"[\\\"https://resource/NGNlNGFiOTZhY2IwZWIwNDNhOTQ0NzNlMjM3MzkwYmM=.image\\\"]\",\n" +
+				"\t\"key\": \"DDPhotoField-KBYVMMN3\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"DDPhotoField\",\n" +
+				"\t\"label\": \"餐费发票照片(收据无效)\",\n" +
+				"\t\"value\": \"[]\",\n" +
+				"\t\"key\": \"DDPhotoField-KBYVOM89\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"DDPhotoField\",\n" +
+				"\t\"label\": \"交通费发票照片\",\n" +
+				"\t\"value\": \"[]\",\n" +
+				"\t\"key\": \"DDPhotoField-KBYVSVP6\"\n" +
+				"}, {\n" +
+				"\t\"componentType\": \"DDPhotoField\",\n" +
+				"\t\"label\": \"其他费用发票照片\",\n" +
+				"\t\"value\": \"[]\",\n" +
+				"\t\"key\": \"DDPhotoField-KBYW108P\"\n" +
+				"}]");
 
+		String type = array.getJSONObject(2).getString("value");
+		String[] values = map.get(type).split("_");
+		if (values.length >1) {
+			String[] indexs = values[1].split(",");
+			String text = array.getJSONObject(Integer.valueOf(indexs[0])).getString("label") + ":" + array.getJSONObject(Integer.valueOf(indexs[0])).getString("value");
+			System.out.println(text);
+//			entry.setAccountCode(values[0]);
+			BigDecimal amount = BigDecimal.ZERO;
+			for (int i=1;i<indexs.length;i++){
+				String value = array.getJSONObject(Integer.valueOf(indexs[i])).getString("value");
+				if (StringUtils.isEmpty(value)){
+					continue;
+				}
+				amount = amount.add(new BigDecimal(value));
+			}
+			System.out.println(amount);
+		}
 
 	}
 

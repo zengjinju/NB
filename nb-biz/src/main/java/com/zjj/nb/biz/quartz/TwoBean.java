@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class TwoBean {
 
     public void out(){
-        log.info("twoBean test");
-        System.out.println("twoBean test");
+        log.info("twoBean TestExample");
+        System.out.println("twoBean TestExample");
     }
 }

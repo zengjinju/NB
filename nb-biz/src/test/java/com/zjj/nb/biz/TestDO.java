@@ -1,5 +1,7 @@
 package com.zjj.nb.biz;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * Created by jinju.zeng on 17/2/24.
  */
@@ -13,6 +15,7 @@ public class TestDO {
     private String bankCode;
     private String bankName;
     private String bankCardNo;
+    @JSONField(serialize = false)
     private String bankCardName;
 
     public String getHostName() {

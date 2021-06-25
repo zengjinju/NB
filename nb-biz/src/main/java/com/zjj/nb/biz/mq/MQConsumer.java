@@ -82,7 +82,7 @@ public class MQConsumer implements InitializingBean {
         });
         try {
             //接受topic为test-nb下的所有tag的消息
-            consumer.subscribe("test-zjj", "TagB");
+            consumer.subscribe("TestExample-zjj", "TagB");
             consumer.start();
         } catch (MQClientException e) {
             e.printStackTrace();

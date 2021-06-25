@@ -1,12 +1,13 @@
 package com.zjj.nb.biz.treeutil.trietree;
 
 /**
+ * R向前缀树，每个节点都有R个子节点空间消耗较大
  * 字典树(前缀重复度较高的字符串集合效率高一些)
  * @author zengjinju
  * @date 2019/2/14 上午10:22
  */
 public class TrieTree {
-    private static final int SIZE = 127;
+    private static final int SIZE = 256;
     private TrieTreeNode root;
 
     public TrieTree(){
@@ -53,8 +54,9 @@ public class TrieTree {
     		int index = letters[i] - 0;
     		//子节点不存在新建
     		if (node.children[index] == null){
-    			node.children[index] = new TrieTreeNode();
-    			node.children[index].value = letters[i];
+    			TrieTreeNode childNode = new TrieTreeNode();
+    			childNode.value = letters[i];
+    			node.children[index] = childNode;
 			} else {
     			node.children[index].num++;
 			}

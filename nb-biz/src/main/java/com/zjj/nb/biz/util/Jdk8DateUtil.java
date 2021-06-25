@@ -56,6 +56,13 @@ public class Jdk8DateUtil {
 		return Date.from(instant);
 	}
 
+	public static Date getLastDayOfMonth(){
+		LocalDate lastDay = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+		ZoneId zoneId = ZoneId.systemDefault();
+		Instant instant = lastDay.atStartOfDay().atZone(zoneId).toInstant();
+		return Date.from(instant);
+	}
+
 	public static void main(String[] args){
 		System.out.println(parseYYYYMMDDHHmmss2Time("2019-11-17 11:11:11"));
 		System.out.println(parseYYYYMMDD2Time("2019-11-16"));

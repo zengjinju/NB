@@ -22,6 +22,7 @@ import com.zjj.nb.dao.entity.userDAO;
 import com.zjj.nb.dao.mapper.userDAOMapper;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +56,9 @@ public class DemoTestController {
 	@Autowired
 	private ApplicationContextUtil applicationContextUtil;
 
+	@Value("#{'${test.list}.split(',')'}")
+	private List list;
+
 	private Boolean flag = false;
 	private KdTree tree = null;
 	private JSONArray array = new JSONArray();
@@ -81,6 +85,8 @@ public class DemoTestController {
 		tree = KdTree.build(list);
 		System.out.println("构建树花费时间："+(System.currentTimeMillis()-start));
 		flag = true;
+
+		System.out.println(list);
 	}
 
 	@RequestMapping("test")
@@ -114,7 +120,7 @@ public class DemoTestController {
 	public void insert() {
 		userDAO dao=new userDAO();
 		dao.setId(7);
-		dao.setUserName("test");
+		dao.setUserName("TestExample");
 		dao.setUserPassword("123");
 		userService.insert(dao);
 	}

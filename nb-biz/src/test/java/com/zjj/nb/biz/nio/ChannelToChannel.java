@@ -16,12 +16,12 @@ public class ChannelToChannel {
 
     public static void main(String args[]){
         try {
-            Path path= Paths.get("/Users/admin/test/AccountAmountService.java");
+            Path path= Paths.get("/Users/admin/TestExample/AccountAmountService.java");
             if(Files.notExists(path)){
                 Files.createFile(path);
             }
-            FileInputStream in=new FileInputStream("/Users/admin/test/service/AccountAmountService.java");
-            FileOutputStream out=new FileOutputStream("/Users/admin/test/AccountAmountService.java");
+            FileInputStream in=new FileInputStream("/Users/admin/TestExample/service/AccountAmountService.java");
+            FileOutputStream out=new FileOutputStream("/Users/admin/TestExample/AccountAmountService.java");
 
             FileChannel readChannel=in.getChannel();
             readChannel.transferTo(0,readChannel.size(), out.getChannel());

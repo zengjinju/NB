@@ -1,9 +1,6 @@
 package com.zjj.nb.biz.sort;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zengjinju
@@ -17,10 +14,10 @@ public class QuickSort {
 
 	private static void sort(Integer[] a,int lo,int hi){
 		//小的子数组改为插入排序提高性能
-		if (hi <= lo + 15){
-			InsertSort.sort(a,lo,hi);
-			return;
-		}
+//		if (hi <= lo + 15){
+//			InsertSort.sort(a,lo,hi);
+//			return;
+//		}
 		int j = partition(a,lo,hi);
 		sort(a,lo,j-1);   //左半部分排序
 		sort(a,j+1,hi);   //右半部分排序
@@ -91,32 +88,31 @@ public class QuickSort {
 	}
 
 	/**
-	 * 找出数组中的第k小的元素
+	 * 找出数组中的第k大的元素
 	 * @param k
 	 * @return
 	 */
 	public int selectK(Integer[] a,int k){
-		int lo = 0,hi = a.length - 1;
+		int lo = 0,hi = a.length - 1,target = a.length -k;
 		while (hi > lo){
 			//获取切分元素，切分元素左边的都比它小，右边的都比它大
-			int j = partition(a,lo,hi);
-			if(j == k){
-				return a[k];
-			} else if (j > k){
-				hi = j -1;
-			} else if (j < k){
-				lo = j + 1;
+			int mid = partition(a,lo,hi);
+			if(mid == target){
+				return a[mid];
+			}
+			if (mid < target){
+				lo = mid + 1;
+			} else {
+				hi = mid - 1;
 			}
 		}
-		return a[k];
+		return a[lo];
 	}
 
 	public static void main(String[] args){
-		List<Integer> list = new ArrayList<>();
-		for (int i=0;i<10000;i++){
-			list.add(i);
-		}
-		Collections.shuffle(list);
-		Integer[] a = new Integer[10000];
+		Integer[] values = {3,1,7,4,9,6};
+		QuickSort quickSort = new QuickSort();
+		int num = quickSort.selectK(values,1);
+		System.out.println(num);
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -110,6 +111,33 @@ public class DateUtil {
         return Hours.hoursBetween(time1, time2).getHours();
     }
 
+    public static Date dateAsStart(Date date){
+
+        Calendar calendarL = Calendar.getInstance();
+        calendarL.setTime(date);
+        calendarL.set(Calendar.HOUR_OF_DAY, 0);
+        calendarL.set(Calendar.MINUTE, 0);
+        calendarL.set(Calendar.SECOND, 0);
+        return calendarL.getTime();
+    }
+
+    /**
+     * 获取一天的结束s
+     * @param date
+     * @return
+     */
+    public static Date dateAsEnd(Date date){
+        Calendar calendarU = Calendar.getInstance();
+        calendarU.setTime(date);
+        calendarU.set(Calendar.HOUR_OF_DAY, 23);
+        calendarU.set(Calendar.MINUTE, 59);
+        calendarU.set(Calendar.SECOND, 59);
+        return calendarU.getTime();
+    }
+
     public static void main(String[] args) {
+        DateTime now = DateTime.now();
+        DateTime time = DateTime.parse("2020-07-27");
+        System.out.println(Days.daysBetween(now,time).getDays());
     }
 }
